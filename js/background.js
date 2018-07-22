@@ -25,8 +25,6 @@ var allowedIds = ['26', '27', '28']; // video category ids for Howto & Style, Ed
   chrome.tabs.query({'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT},
    function(tabs){
       currentURL = tabs[0].url;
-      console.log(currentURL);
-      return currentURL;
    }
   );
 })();
@@ -38,16 +36,6 @@ $(document).ready(function(){
   }
   else{
       console.log('Not loaded yet');
-  }
-
-  function getCurrentUrl() {
-    chrome.tabs.query({'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT},
-     function(tabs){
-        currentURL = tabs[0].url;
-        console.log(currentURL);
-        return currentURL;
-     }
-    );
   }
 
   function parseToId(url){
@@ -77,15 +65,9 @@ $(document).ready(function(){
       console.log(error);
     })
   }
-// ---------------------------------------------------------------------------------------------------------------------
-
   console.log(currentURL);
-  var promise = isAllowed(currentURL).then((isAllowedUrl) => {
-    console.log("This Youtube video is allowed and will NOT be blocked: " + isAllowedUrl);
-    return isAllowedUrl;
-  });
-
-
+  var isAllowedUrl = isAllowed(currentURL);
+  console.log(isAllowedUrl);
 
   /*
    * Listens if url is a youtube video and blocks accordingly.
@@ -97,7 +79,6 @@ $(document).ready(function(){
       function(currentURL) {
         if(!isAllowed(currentUrl)){
             return {redirectUrl:'https://www.youtube.com/channel/UC3yA8nDwraeOfnYfBWun83g'};
-
         }
       },
       {
