@@ -1,7 +1,7 @@
 body{
     font-family: 'Roboto', sans-serif;
     text-align: center;
-    height: 280px;
+    height: 300px;
     width: 240px;
     margin: 15px;
 }
@@ -24,10 +24,21 @@ h1{
   display: none;
 }
 
+#text{
+  font-size: 13px;
+  width: 70%;
+  margin-left: 35px;
+}
+
+#addedText{
+  font-size: 15px;
+  width: 80%;
+  margin-left: 25px;
+}
+
 #rangeSlider{
   margin-top: 10px;
   margin: 15px;
-  font-size: 14px;
 }
 
 #timer{

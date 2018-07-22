@@ -5,9 +5,12 @@
     <title>YouTube Scholar</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/background.js"></script>
   </head>
-  <body>
 
+  <body>
+    
     <div class="heading">
       <h1>YouTube Scholar</h1>
       <a href="https://www.youtube.com/channel/UC3yA8nDwraeOfnYfBWun83g" target="_blank"><img src="icon.png" height="50" width="65"></a>
@@ -16,7 +19,7 @@
     <div class="range">
       <input id="rangeSlider" type="range" step="1" min="1" max="13" list="ticks">
       <div><label id="rangeText"></label></div>
-      <datalist id="ticks">
+      <datalist style="font-size: 17px;" id="ticks">
         <option value="1"</option>
         <option value="2"</option>
         <option value="3"</option>
@@ -35,16 +38,13 @@
 
     <div class="footer">
        <button id="startButton" type="button">Start</button>
-       <p id="text" style="font-size: 13px;">Press start to block all YouTube videos except for those in the <strong>Education, Science & Technology, and Howto & Style</strong> categories</p>
+       <p id="text">Press start to block YouTube videos not in <strong>Education, Science & Technology, or Howto & Style</strong> categories</p>
     </div>
 
     <div class="addedElement">
-      <p id="timer">0:00:00</p>
-      <p style="font-size: 15px;">All YouTube videos not in the <strong>Education, Science & Technology, or Howto & Style</strong> categories are blocked</p>
+      <p style="color: tomato;" id="timer"><strong>0:00:00</strong></p>
+      <p id="addedText">YouTube videos not in <strong>Education, Science & Technology, or Howto & Style</strong> categories are blocked</p>
     </div>
 
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-   <script src="js/popup.js"></script>
-   
   </body>
 </html>
