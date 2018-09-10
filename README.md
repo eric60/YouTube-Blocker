@@ -9,4 +9,4 @@ The application uses Chrome's Extension API and Youtube's Data API to detect You
 
 **Logo Made in Adobe Photoshop. Anyone is free to use it**
 
-<img src="https://github.com/erics98/ChromeExtension/blob/master/icon.png" width="250" height="250">
+<img src="https://github.com/erics98/ChromeExtension/blob/master/icon.png" width="150" height="100">
