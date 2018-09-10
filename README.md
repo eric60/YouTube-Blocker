@@ -8,4 +8,5 @@ The application uses Chrome's Extension API and Youtube's Data API to detect You
 
 
 **Logo Made in Adobe Photoshop. Anyone is free to use it**
-![alt text](https://github.com/erics98/ChromeExtension/blob/master/icon.png =250x250)
+
+<img src="https://github.com/erics98/ChromeExtension/blob/master/icon.png" width="250" height="250">
