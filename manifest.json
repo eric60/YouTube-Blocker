@@ -2,8 +2,7 @@
 "name": "YouTube Scholar",
 "version": "1.0",
 "manifest_version": 2,
-"description": "Need to block YouTube to stop procrastinating but still need to watch youtube tutorials
-or lessons? Become a Youtube Scholar and only watch youtube videos in the educational categories!",
+"description": "Block youtube videos not in educational categories",
 "icons": {
   "128": "icon.png"
 },

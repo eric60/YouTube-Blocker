@@ -1,22 +1,4 @@
-var rangeValues = {
-  1: "30 min",
-  2: "1 hour",
-  3: "1 hour 30 min",
-  4: "2 hours",
-  5: "2 hours 30 min",
-  6: "3 hours",
-  7: "3 hours 30 min",
-  8: "4 hours",
-  9: "4 hours 30 min",
-  10: "5 hours",
-  11: "5 hours 30 min",
-  12: "6 hours",
-  13: "6 hours 30 minutes"
-};
-
-var isOn = false;
 var currentURL;
-var countDownTime;
 var videoCategory;
 var apiKEY = "AIzaSyBF9SR0ml6IhuO0mXvRXPKBeBgklC2qvDU";
 var allowedIds = ['26', '27', '28']; // video category ids for Howto & Style, Education, and Science & technology
@@ -28,6 +10,8 @@ var allowedIds = ['26', '27', '28']; // video category ids for Howto & Style, Ed
    }
   );
 })();
+console.log('testing')
+
 
 $(document).ready(function(){
 
@@ -44,13 +28,14 @@ $(document).ready(function(){
     return (match && match[2].length == 11) ? match[2] : null; // check match array not null first, returns string id of YouTube video
   }
 
-  // returns true if allowed youtube video category or any other website, false if blocked youtube category
+
   function isAllowed(url) {
     var videoId = parseToId(url);
     if(!videoId){
        return true; // If URL is NOT a Youtube video then return true
     }
     const restAPI = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKEY}&fields=items(snippet(categoryId))&part=snippet`
+    
     // fetch method to return if current page's youtube video is allowed or not through Youtube's Data API
     return fetch(restAPI)
     .then(function(response){
@@ -65,6 +50,7 @@ $(document).ready(function(){
       console.log(error);
     })
   }
+  console.log('testing')
   console.log(currentURL);
   var isAllowedUrl = isAllowed(currentURL);
   console.log(isAllowedUrl);
@@ -78,7 +64,7 @@ $(document).ready(function(){
     chrome.webRequest.onBeforeRequest.addListener(
       function(currentURL) {
         if(!isAllowed(currentUrl)){
-            return {redirectUrl:'https://www.youtube.com/channel/UC3yA8nDwraeOfnYfBWun83g'};
+            return {redirectUrl:'https://www.youtube.com/channel/UCdxpofrI-dO6oYfsqHDHphw'};
         }
       },
       {
@@ -90,69 +76,28 @@ $(document).ready(function(){
     );
   }
 
-  // if backgroun current url is not allowed youtube video, then initialize blocking current webpage
-  initializeBlocking();
-
-  $(function(){
-    // val() returns string value of rangeSlider so use bracket notation
-    $('#rangeText').text(rangeValues[$('#rangeSlider').val()]);
-    $('#rangeSlider').change(function(){
-      $('#rangeText').text(rangeValues[$(this).val()]);
-    });
-  })
-
-  function switchToTimer(){
-        $('.footer').hide();
-        $('.range').hide();
-        // show hidden elements, the logo and time left
-        $('.addedElement').show();
-  }
-
-  function switchToMenu(){
-    var options = {
-      type: 'basic',
-      title: 'Timer',
-      message: 'Blocking time over!',
-      iconUrl: 'icon.png',
-      priority: 2
+  chrome.browserAction.onClicked.addListener(function(tab) {
+    chrome.storage.local.get("state", function(result) {
+    if(result.state == null) {
+      chrome.storage.local.set({state: false});
     }
-    $('.footer').show();
-    $('.range').show();
-    $('.addedElement').hide();
-  }
-
-  function startTimer(addedTime){
-      switchToTimer();
-      var start = Date.now();
-
-      function timer(){
-        var difference = Math.floor(addedTime - ((Date.now() - start) / 1000));
-        var hours = Math.floor(difference / 3600);
-        var minutes = Math.floor(difference / 60 % 60);
-        var seconds = difference % 60;
-
-        minutes = (minutes < 10) ? '0' + minutes : minutes;
-        seconds = (seconds < 10) ? '0' + seconds : seconds;
-
-        if(difference == 0){
-          start = Date.now() + 1000;
-        }
-
-        $('#timer').text(hours + ':' + minutes + ':' + seconds);
-
-        if(hours == 0 && minutes == 0 && seconds == 0){
-          clearInterval(handle);
-          switchToMenu();
-        }
+    let activated = result.state
+    $('#startButton').on("click",function(){
+      activated = !activated
+      if(activated) {
+        $(this).css('background-color','#f44336')
+        $(this).text("Deactivate")
+        chrome.storage.local.set({state: true});
+        initializeBlocking();
+      } else {
+        $(this).css('background-color','#4CAF50')
+        $(this).text("Activate")
+        chrome.storage.local.set({state: false});
       }
-      timer();
-      var handle = setInterval(timer, 1000);
-  } // end startTiner function
-
-  $('#startButton').on("click",function(){
-    countDownTime = $('#rangeSlider').val();
-    startTimer(countDownTime * 60 * 30); // countDownTime * 60 * 30 - convert to seconds then minutes by 30 min blocks
-
+  
+    })
   })
+  
+});
 
 });

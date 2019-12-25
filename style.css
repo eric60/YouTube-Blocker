@@ -46,13 +46,18 @@ h1{
 }
 
 #startButton {
-  margin: 3px;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  width: 9em;
+  height: 3em;
+  font-size: 17px;
+  font-weight: 5em;
+  border-radius: .5em;
   color: #fff;
   padding: 6px 12px;
   background-color: #4CAF50;
   display: inline-block;
   text-align: center;
-  font-size: 14px;
   cursor: pointer;
 }
 
