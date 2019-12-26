@@ -1,26 +1,27 @@
 var currentURL;
 var videoCategory;
-var apiKEY = "AIzaSyBF9SR0ml6IhuO0mXvRXPKBeBgklC2qvDU";
+var API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
 var allowedIds = ['26', '27', '28']; // video category ids for Howto & Style, Education, and Science & technology
+let activated = chrome.storage.local.get(['activated'], function(result) {
+  console.log('Settings retrieved', result.activated);
+});
 
 (function() {
-  chrome.tabs.query({'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT},
+  var queryInfo = {
+    'active': true, 
+    'lastFocusedWindow': true,
+    'windowId': chrome.windows.WINDOW_ID_CURRENT
+  }
+  chrome.tabs.query(queryInfo,
    function(tabs){
       currentURL = tabs[0].url;
+      console.log(currentURL)
    }
   );
 })();
-console.log('testing')
 
 
 $(document).ready(function(){
-
-  if (typeof jQuery !== 'undefined'){
-      console.log('jQuery Loaded');
-  }
-  else{
-      console.log('Not loaded yet');
-  }
 
   function parseToId(url){
     var regEx = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
@@ -29,31 +30,29 @@ $(document).ready(function(){
   }
 
 
-  function isAllowed(url) {
+  async function isAllowed(url) {
     var videoId = parseToId(url);
     if(!videoId){
        return true; // If URL is NOT a Youtube video then return true
     }
-    const restAPI = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKEY}&fields=items(snippet(categoryId))&part=snippet`
+    const restAPI = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${API_KEY}&fields=items(snippet(categoryId))&part=snippet`
     
     // fetch method to return if current page's youtube video is allowed or not through Youtube's Data API
-    return fetch(restAPI)
-    .then(function(response){
-      return response.json();
-    })
-    .then(function(json) {
-      videoCategory = json.items[0].snippet.categoryId;
-      console.log("The video category of the current Youtube video is " + videoCategory);
-      return allowedIds.includes(videoCategory);
-    })
-    .catch(function(error) {
-      console.log(error);
-    })
+     const response = await fetch(restAPI)
+     const json = await response.json()
+     console.log(JSON.stringify(json))
+     processYoutubeData(json)
   }
-  console.log('testing')
-  console.log(currentURL);
+
+  function processYoutubeData(json) {
+    videoCategory = json.items[0].snippet.categoryId;
+    console.log("The video category of the current Youtube video is " + videoCategory);
+    return allowedIds.includes(videoCategory);
+  }
+
+  console.log('current url: ' + currentURL);
   var isAllowedUrl = isAllowed(currentURL);
-  console.log(isAllowedUrl);
+  console.log('isAllowedUrl: ' + isAllowedUrl);
 
   /*
    * Listens if url is a youtube video and blocks accordingly.
@@ -62,8 +61,8 @@ $(document).ready(function(){
    */
   function initializeBlocking(){
     chrome.webRequest.onBeforeRequest.addListener(
-      function(currentURL) {
-        if(!isAllowed(currentUrl)){
+      function listener() {
+        if(!isAllowed(currentUrl) && activated){
             return {redirectUrl:'https://www.youtube.com/channel/UCdxpofrI-dO6oYfsqHDHphw'};
         }
       },
@@ -76,28 +75,22 @@ $(document).ready(function(){
     );
   }
 
-  chrome.browserAction.onClicked.addListener(function(tab) {
-    chrome.storage.local.get("state", function(result) {
-    if(result.state == null) {
-      chrome.storage.local.set({state: false});
+
+  $('#startButton').on("click",function(){
+    activated = !activated
+    if(activated) {
+      $(this).css('background-color','#f44336')
+      $(this).text("Deactivate")
+      initializeBlocking();
+    } 
+    else {
+      $(this).css('background-color','#4CAF50')
+      $(this).text("Activate")
     }
-    let activated = result.state
-    $('#startButton').on("click",function(){
-      activated = !activated
-      if(activated) {
-        $(this).css('background-color','#f44336')
-        $(this).text("Deactivate")
-        chrome.storage.local.set({state: true});
-        initializeBlocking();
-      } else {
-        $(this).css('background-color','#4CAF50')
-        $(this).text("Activate")
-        chrome.storage.local.set({state: false});
-      }
-  
-    })
-  })
-  
-});
+    chrome.storage.local.set({activated: activated}, function() {
+      console.log('Activated set to ' + activated);
+    });
+  });
+
 
 });

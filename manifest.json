@@ -7,7 +7,7 @@
   "128": "icon.png"
 },
 "background": {
-  "scripts": ["js/background.js"],
+  "scripts": ["js/jquery-3.4.1.min.js","js/background.js"],
   "persistent": true
 },
 "browser_action": {
@@ -17,6 +17,7 @@
 "content_security_policy": "script-src 'self' https://ajax.googleapis.com https://www.googleapis.com; object-src 'self'",
 "permissions": [
   "notifications",
+  "storage",
   "background",
   "<all_urls>",
   "webRequest",
