@@ -26,8 +26,6 @@
   "storage",
   "background",
   "<all_urls>",
-  "webRequest",
-  "webRequestBlocking",
   "tabs"
  ]
 }
