@@ -1,10 +1,7 @@
-var currentURL;
-var videoCategory;
-var API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
-var allowedIds = ['26', '27', '28']; // video category ids for Howto & Style, Education, and Science & technology
-let activated = chrome.storage.local.get(['activated'], function(result) {
-  console.log('Settings retrieved', result.activated);
-});
+let currentURL;
+let API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
+let allowedIds = ['26', '27', '28']; // video category ids for Howto & Style, Education, Science & technology
+let activated;
 
 (function() {
   var queryInfo = {
@@ -20,8 +17,61 @@ let activated = chrome.storage.local.get(['activated'], function(result) {
   );
 })();
 
-
 $(document).ready(function(){
+
+  getActivated(executeContentScript);
+  console.log('current url: ' + currentURL);
+  var isAllowedUrl = isAllowed(currentURL);
+  console.log('isAllowedUrl: ' + isAllowedUrl);
+
+  function getActivated(callback) {
+    chrome.storage.local.get('activated', function(data) {
+        if(data.activated === undefined) {
+          activated = false
+          setActivated(false)
+        } else {
+          console.log('Chrome storage GET activated value is ' + data.activated)
+          if(data.activated == false) {
+            $('#startButton').css('background-color','#4CAF50')
+            $('#startButton').text("Activate")   
+          } else {
+            $('#startButton').css('background-color','#f44336')
+            $('#startButton').text("Deactivate")
+            callback();
+          }
+          activated = data.activated;
+        }
+    })
+  }
+
+  function executeContentScript() {
+    chrome.tabs.executeScript({
+      file: 'js/contentScript.js'
+    });
+  }
+
+  $('#startButton').on("click", function() {
+    activated = !activated
+    if(activated) {
+      $(this).css('background-color','#f44336')
+      $(this).text("Deactivate")
+      executeContentScript();
+    } 
+    else {
+      $(this).css('background-color','#4CAF50')
+      $(this).text("Activate")
+    }
+    setActivated(activated)
+  });
+
+  function setActivated(value) {
+    chrome.storage.local.set({activated : value}, function(){
+      console.log('Chrome storage SET activated value ' + value)
+      if(chrome.runtime.lastError) {
+        throw Error(chrome.runtime.lastError);
+      }
+   })
+  }
 
   function parseToId(url){
     var regEx = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
@@ -41,56 +91,15 @@ $(document).ready(function(){
      const response = await fetch(restAPI)
      const json = await response.json()
      console.log(JSON.stringify(json))
-     processYoutubeData(json)
+     return processYoutubeData(json)
   }
 
   function processYoutubeData(json) {
-    videoCategory = json.items[0].snippet.categoryId;
+    let videoCategory = json.items[0].snippet.categoryId;
     console.log("The video category of the current Youtube video is " + videoCategory);
     return allowedIds.includes(videoCategory);
   }
 
-  console.log('current url: ' + currentURL);
-  var isAllowedUrl = isAllowed(currentURL);
-  console.log('isAllowedUrl: ' + isAllowedUrl);
-
-  /*
-   * Listens if url is a youtube video and blocks accordingly.
-   * Function does not run automatically! Must call it directly
-   *
-   */
-  function initializeBlocking(){
-    chrome.webRequest.onBeforeRequest.addListener(
-      function listener() {
-        if(!isAllowed(currentUrl) && activated){
-            return {redirectUrl:'https://www.youtube.com/channel/UCdxpofrI-dO6oYfsqHDHphw'};
-        }
-      },
-      {
-        urls: [
-          "*://*.yahoo.com/*"
-        ]
-      },
-      ["blocking"]
-    );
-  }
-
-
-  $('#startButton').on("click",function(){
-    activated = !activated
-    if(activated) {
-      $(this).css('background-color','#f44336')
-      $(this).text("Deactivate")
-      initializeBlocking();
-    } 
-    else {
-      $(this).css('background-color','#4CAF50')
-      $(this).text("Activate")
-    }
-    chrome.storage.local.set({activated: activated}, function() {
-      console.log('Activated set to ' + activated);
-    });
-  });
 
 
 });
