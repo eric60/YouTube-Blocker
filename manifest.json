@@ -10,22 +10,24 @@
   "scripts": ["js/jquery-3.4.1.min.js","js/background.js"],
   "persistent": true
 },
+"content_scripts": [
+  {
+    "matches": ["*://*.youtube.com/*"],
+    "run_at": "document_idle",
+    "js": ["js/jquery-3.4.1.min.js", "js/contentScript.js"]
+  }
+],
 "browser_action": {
   "default_title": "YouTube Scholar",
   "default_popup": "popup.html"
 },
 "content_security_policy": "script-src 'self' https://ajax.googleapis.com https://www.googleapis.com; object-src 'self'",
-"content_scripts": [
-  {
-      "matches": [ "*://*/*" ],
-      "js": ["js/jquery-3.4.1.min.js", "js/contentScript.js"]
-  }
-],
 "permissions": [
   "notifications",
   "storage",
   "background",
   "<all_urls>",
-  "tabs"
+  "tabs",
+  "activeTab"
  ]
 }
