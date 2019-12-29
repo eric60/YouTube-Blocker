@@ -1,50 +1,47 @@
 let activated;
+const API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg"
 
-// (function() {
-//   var queryInfo = {
-//     'active': true, 
-//     'lastFocusedWindow': true,
-//     'windowId': chrome.windows.WINDOW_ID_CURRENT
-//   }
-//   chrome.tabs.query(queryInfo,
-//    function(tabs){
-//       let currentURL = tabs[0].url;
-//       console.log(currentURL)
-//    }
-//   );
-// })();
-
-// chrome.runtime.onMessage.addListener(
-//   function(request, sender, sendResponse) {
-//     console.log(sender.tab ?
-//                 "from a content script:" + sender.tab.url :
-//                 "from the extension");
-//     currentURL = sender.tab.url;
-
-//     if (request.initiate) {
-//       initiateisAllowed(currentURL)
-//       sendResponse({initiated: true});
-//     }
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    console.log('request url: ' + request.url);
     
-// });
+    initiateisAllowed(request.url).then(json => {
+      sendResponse({json: json});
+    })
+
+    return true; // return true to indicate you want to send a response asynchronously
+  });
+
+
+  async function initiateisAllowed(url, sendResponse) {
+    let videoId = parseToId(url);
+    console.log('Youtube video id:' + videoId)
+
+    if(videoId == null){
+       return; // If URL is NOT a Youtube video then return true
+    }
+
+    const restAPI = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}&fields=items(snippet(categoryId))`
+    console.log(restAPI)
+
+    const response = await fetch(restAPI);
+    console.log(response);
+
+    const json = await response.json();
+    console.log(json);
+    return json;
+  }
+
+  function parseToId(url){
+    var regEx = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+    var match = url.match(regEx);
+
+    return (match && match[2].length == 11) ? match[2] : null; 
+  }
+
 
 $(document).ready(function(){
 
-  // chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  //   if(changeInfo.status == 'complete') {
-  //     let isAllowed = isAllowed(currentURL)
-
-  //     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-  //       chrome.tabs.sendMessage(tabs[0].id, {isAllowed: isAllowed}, function(response) {
-
-  //       });  
-  //     });
-
-  //   }
-
-  // }) 
-
-  // Determine Activated status and set button UI
   getActivated();
 
   function getActivated() {
@@ -76,13 +73,6 @@ $(document).ready(function(){
   }
 
 
- 
-  // function executeContentScript() {
-  //   chrome.tabs.executeScript({
-  //     file: 'js/contentScript.js'
-  //   });
-  // }
-
   $('#startButton').on("click", function() {
     activated = !activated
     if(activated) {
@@ -95,11 +85,5 @@ $(document).ready(function(){
     }
     setActivated(activated)
   });
-
-
-
- 
-
- 
 
 });
