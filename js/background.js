@@ -1,8 +1,21 @@
 let activated;
 const API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg"
 
+// notifiy content script when youtube dynamically updates DOM
+chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
+  console.log('page updated')
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {query: "Page updated"}, function(response) {
+    });
+  });
+})
+
+// fetch request doesn't work in content script in context of web page due to Cors restritions, won't get a response from get
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
+    if(request.createNotification == true) {
+        showNotification();
+    }
     console.log('request url: ' + request.url);
     
     initiateisAllowed(request.url).then(json => {
@@ -11,6 +24,16 @@ chrome.runtime.onMessage.addListener(
 
     return true; // return true to indicate you want to send a response asynchronously
   });
+
+  function showNotification() {
+    let options = {
+        type: 'basic', 
+        iconUrl: 'icon.png', 
+        title: "Youtube Scholar Redirected", 
+        message: "You were watching a non educational youtube video so you were redirected." 
+    }
+    chrome.notifications.create('Youtube Scholar', options, function() { console.log("Last error:", chrome.runtime.lastError);})
+}
 
 
   async function initiateisAllowed(url, sendResponse) {

@@ -28,6 +28,7 @@
   "background",
   "<all_urls>",
   "tabs",
-  "activeTab"
+  "activeTab",
+  "webNavigation"
  ]
 }
