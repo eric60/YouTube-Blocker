@@ -106,7 +106,11 @@ $(document).ready(function(){
 
       // refresh tab
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
+        console.log(tabs[0].url);
+        let url = tabs[0].url;
+        if(url.search("youtube.com") != -1) {
+          chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
+        }
       });
     } 
     else {
