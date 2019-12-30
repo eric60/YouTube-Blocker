@@ -26,9 +26,8 @@
   "notifications",
   "storage",
   "background",
-  "<all_urls>",
+  "*://*.youtube.com/*",
   "tabs",
-  "activeTab",
   "webNavigation"
  ]
 }
