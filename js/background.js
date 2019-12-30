@@ -1,6 +1,5 @@
 let activated;
 const API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg"
-let prevIds = [];
 
 // notifiy content script when youtube dynamically updates DOM
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
@@ -30,11 +29,6 @@ chrome.runtime.onMessage.addListener(
 
   async function initiateisAllowed(url, sendResponse) {
     let videoId = parseToId(url);
-    // if(prevIds.includes(videoId)) {
-    //   console.log('--------- Not fetching. Video id category already fetched ---------')
-    //   return;
-    // }
-    //prevIds.push(videoId);
     console.log('New Youtube video id:' + videoId)
 
     if(videoId == null){
@@ -109,6 +103,11 @@ $(document).ready(function(){
     if(activated) {
       $(this).css('background-color','#f44336')
       $(this).text("Deactivate")
+
+      // refresh tab
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
+      });
     } 
     else {
       $(this).css('background-color','#4CAF50')

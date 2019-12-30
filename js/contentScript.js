@@ -1,10 +1,19 @@
 
 let firstRun = false;
 let prevUrls = [];
+let activated;
 
+chrome.storage.local.get(['activated'], function(data) {
+    activated = data.activated;  
+    console.log('Activated value: ' + activated)  
 
-initiate();
-
+    if(activated == true) {
+        console.log('Blocking is activated. Initiating blocking')
+        initiate();
+    } else {
+        console.log('Blocking not activated. Not initiating')
+    }
+});
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {  
     if(request.query === 'Page updated')
@@ -13,8 +22,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         initiate();
     }
  });
-
-
  
  function initiate() {
     let currentUrl = location.href;
@@ -30,8 +37,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         processYoutubeData(response.json, blockYoutubeUrl)
     });
  }
-
-
 
   function processYoutubeData(json, callback) {
     const allowedIds = ['26', '27', '28']; // video category ids for Howto & Style, Education, Science & technology
