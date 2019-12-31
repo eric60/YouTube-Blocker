@@ -57,11 +57,11 @@ chrome.runtime.onMessage.addListener(
     let options = {
         type: 'basic', 
         iconUrl: 'icon.png', 
-        title: "Youtube Scholar", 
+        title: "Youtube Study", 
         message: "You were watching a non educational youtube video so you were redirected to the homepage.\nOnly Education, Science & Technology, or Howto & Style videos are allowed.",
         requireInteraction: true
     }
-    chrome.notifications.create('Youtube Scholar', options, function() { console.log("Last error:", chrome.runtime.lastError);})
+    chrome.notifications.create('Youtube Study', options, function() { console.log("Last error:", chrome.runtime.lastError);})
   }
 
 

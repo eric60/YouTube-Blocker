@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         return;
     }
     prevUrls.push(currentUrl);
-    console.log("Initiating Youtube Scholar for new url: " + currentUrl);
+    console.log("Initiating Youtube Study for new url: " + currentUrl);
 
     chrome.runtime.sendMessage({url: currentUrl}, function(response) {
         console.log(response.json);
