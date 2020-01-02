@@ -1,5 +1,6 @@
 let activated;
-const API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg"
+const API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
+let countApiCalls = 0;
 
 // notifiy content script when youtube dynamically updates DOM
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
@@ -36,12 +37,14 @@ chrome.runtime.onMessage.addListener(
     }
 
     const restAPI = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}&fields=items(snippet(categoryId))`
-    console.log(restAPI)
 
+    countApiCalls++;
+    console.log("API calls so far: " + countApiCalls)
     const response = await fetch(restAPI);
     console.log(response);
 
     const json = await response.json();
+    console.log('--response json--')
     console.log(json);
     return json;
   }
@@ -114,10 +117,24 @@ $(document).ready(function(){
       });
     } 
     else {
-      $(this).css('background-color','#4CAF50')
-      $(this).text("Activate")
+      checkNotification();
+
     }
     setActivated(activated)
   });
+
+
+  function checkNotification() {
+    if(confirm('Are you sure you really need to deactivate?')) {
+        if(confirm('Are you really really sure? Maybe you can study longer. Take a break in 10 minutes?')) {
+          $('#startButton').css('background-color','#4CAF50')
+          $('#startButton').text("Activate")
+        } else {
+
+        }
+    } else {
+        // Cancel do nothing.
+    }
+  }
 
 });
