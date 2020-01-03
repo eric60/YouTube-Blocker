@@ -101,11 +101,12 @@ $(document).ready(function(){
   }
 
 
+  let numClicks = 0;
   $('#startButton').on("click", function() {
-    activated = !activated
-    if(activated) {
+
+    if(!activated) {
       $(this).css('background-color','#f44336')
-      $(this).text("Deactivate")
+      $(this).text("Click 17 times to Deactivate")
 
       // refresh tab
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -115,16 +116,26 @@ $(document).ready(function(){
           chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
         }
       });
+      activated = !activated
     } 
     else {
-      checkNotification();
+      numClicks++;
+      console.log(numClicks);
+      $(".clicks").show();
+      $(".clicks").text(numClicks)
 
+      if(numClicks >= 17) {
+        deactivate();
+        numClicks = 0;
+        $(".clicks").hide();
+      }
     }
     setActivated(activated)
   });
 
 
-  function checkNotification() {
+  function deactivate() {
+    activated = !activated
     if(confirm('Are you sure you really need to deactivate?')) {
         if(confirm('Are you really really sure? Maybe you can study longer. Take a break in 10 minutes?')) {
           $('#startButton').css('background-color','#4CAF50')
