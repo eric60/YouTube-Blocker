@@ -77,14 +77,13 @@ $(document).ready(function(){
         if(data.activated === undefined) {
           activated = false
           setActivated(false)
+          deactivateJQuery();
         } else {
           console.log('Chrome storage GET activated value is ' + data.activated)
-          if(data.activated == false) {
-            $('#startButton').css('background-color','#4CAF50')
-            $('#startButton').text("Activate")   
+          if(data.activated === false) {
+            deactivateJQuery();  
           } else {
-            $('#startButton').css('background-color','#f44336')
-            $('#startButton').text("Deactivate")
+            activateJQuery();
           }
           activated = data.activated;
         }
@@ -93,20 +92,16 @@ $(document).ready(function(){
 
   function setActivated(value) {
     chrome.storage.local.set({activated : value}, function(){
-      console.log('Chrome storage SET activated value ' + value)
+      console.log('You set chrome storage activated value to ' + value)
       if(chrome.runtime.lastError) {
         throw Error(chrome.runtime.lastError);
       }
    })
   }
 
-
-  let numClicks = 0;
   $('#startButton').on("click", function() {
-
     if(!activated) {
-      $(this).css('background-color','#f44336')
-      $(this).text("Click 17 times to Deactivate")
+      activateAction();
 
       // refresh tab
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -116,36 +111,36 @@ $(document).ready(function(){
           chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
         }
       });
-      activated = !activated
     } 
     else {
-      numClicks++;
-      console.log(numClicks);
-      $(".clicks").show();
-      $(".clicks").text(numClicks)
-
-      if(numClicks >= 17) {
-        deactivate();
-        numClicks = 0;
-        $(".clicks").hide();
-      }
+        deactivateAction();
     }
     setActivated(activated)
   });
 
 
-  function deactivate() {
-    activated = !activated
-    if(confirm('Are you sure you really need to deactivate?')) {
-        if(confirm('Are you really really sure? Maybe you can study longer. Take a break in 10 minutes?')) {
-          $('#startButton').css('background-color','#4CAF50')
-          $('#startButton').text("Activate")
-        } else {
+  function activateJQuery() {
+    // currently activated
+    $('#startButton').css('background-color','#f44336')
+    $('#startButton').text("Deactivate")
+  }
 
-        }
-    } else {
-        // Cancel do nothing.
+  function activateAction() {
+    activateJQuery()
+    activated = !activated
+  }
+
+  function deactivateJQuery() {
+    // currently deactivated
+    $('#startButton').css('background-color','#4CAF50')
+    $('#startButton').text("Activate")
+  }
+
+  function deactivateAction() {
+    if(confirm('Are you sure you really need to deactivate?')) {
+       deactivateJQuery();
     }
+    activated = !activated
   }
 
 });

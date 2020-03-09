@@ -26,7 +26,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
  function initiate() {
     let currentUrl = location.href;
     if(prevUrls.includes(currentUrl)) {
-        console.log('--------- Not fetching. Url already fetched ---------')
+        console.log('--------- Url already fetched.Not fetching again. ---------')
         return;
     }
     prevUrls.push(currentUrl);
