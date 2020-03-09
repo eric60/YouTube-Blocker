@@ -15,18 +15,35 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if(request.createNotification == true) {
-        showNotification();
+        let message = "You were watching a non educational youtube video so you were redirected to the homepage.\nOnly Education, Science & Technology, or Howto & Style videos are allowed."
+        showNotification(message);
     } else {
       console.log('request url: ' + request.url);
     
       initiateisAllowed(request.url).then(json => {
-        sendResponse({json: json});
+        if(json.error) {
+          handleYoutubeAPIError(json)
+        } else {
+          $('.errorMessage').text("")
+          sendResponse({json: json});
+        }
       })
   
       return true; // return true to indicate you want to send a response asynchronously
     }
   });
 
+  function handleYoutubeAPIError(json) {
+    console.log("API error trigger")
+    let message = json.error.message;
+    console.log(message)
+    let showingMessage = "Sorry but the Youtube API daily limit quota of 10,000 was exceeded so this extension will not block videos anymore. It will reset at midnight PT/3 am EST"
+    $('.errorMessage').text(showingMessage)
+    showNotification(showingMessage)
+    // if(message.indexOf("Daily Limit Exceeded")) {
+      
+    // }
+  }
 
   async function initiateisAllowed(url, sendResponse) {
     let videoId = parseToId(url);
@@ -56,12 +73,12 @@ chrome.runtime.onMessage.addListener(
     return (match && match[2].length == 11) ? match[2] : null; 
   }
 
-  function showNotification() {
+  function showNotification(message) {
     let options = {
         type: 'basic', 
         iconUrl: 'icon.png', 
         title: "Youtube Study", 
-        message: "You were watching a non educational youtube video so you were redirected to the homepage.\nOnly Education, Science & Technology, or Howto & Style videos are allowed.",
+        message: message,
         requireInteraction: true
     }
     chrome.notifications.create('Youtube Study', options, function() { console.log("Last error:", chrome.runtime.lastError);})
@@ -69,7 +86,6 @@ chrome.runtime.onMessage.addListener(
 
 
 $(document).ready(function(){
-
   getActivated();
 
   function getActivated() {
