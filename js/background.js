@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(
   
       return true; // return true to indicate you want to send a response asynchronously
     }
-  });
+});
 
   function handleYoutubeAPIError(json) {
     console.log("API error trigger")
@@ -58,6 +58,7 @@ chrome.runtime.onMessage.addListener(
     countApiCalls++;
     console.log("API calls so far: " + countApiCalls)
     const response = await fetch(restAPI);
+    console.log('--response message--')
     console.log(response);
 
     const json = await response.json();
