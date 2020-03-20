@@ -4,6 +4,7 @@ const API_KEY_2 = "AIzaSyA5JFptzkrMDka_3W93nPCTtdFD-CRRJVQ";
 let apiKeysQueue = []
 let countApiCalls = 0;
 
+
 // notifiy content script when youtube dynamically updates DOM
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
   console.log('page updated')
@@ -87,6 +88,15 @@ chrome.runtime.onMessage.addListener(
 
 $(document).ready(function(){
   getActivated();
+
+  $('#go-to-options').on('click', function() {
+    if (chrome.runtime.openOptionsPage) {
+      console.log('trigger')
+      chrome.runtime.openOptionsPage();
+    } else {
+      window.open(chrome.runtime.getURL('options.html'));
+    }
+  });
 
   function getActivated() {
     chrome.storage.local.get('activated', function(data) {
