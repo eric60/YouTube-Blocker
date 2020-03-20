@@ -1,5 +1,7 @@
 let activated;
-const API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
+const API_KEY_1 = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
+const API_KEY_2 = "AIzaSyA5JFptzkrMDka_3W93nPCTtdFD-CRRJVQ";
+let apiKeysQueue = []
 let countApiCalls = 0;
 
 // notifiy content script when youtube dynamically updates DOM
@@ -40,9 +42,6 @@ chrome.runtime.onMessage.addListener(
     let showingMessage = "Sorry but the Youtube API daily limit quota of 10,000 was exceeded so this extension will not block videos anymore. It will reset at midnight PT/3 am EST"
     $('.errorMessage').text(showingMessage)
     showNotification(showingMessage)
-    // if(message.indexOf("Daily Limit Exceeded")) {
-      
-    // }
   }
 
   async function initiateisAllowed(url, sendResponse) {
@@ -53,7 +52,7 @@ chrome.runtime.onMessage.addListener(
        return; // If URL is NOT a Youtube video then return true
     }
 
-    const restAPI = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}&fields=items(snippet(categoryId))`
+    const restAPI = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY_2}&fields=items(snippet(categoryId))`
 
     countApiCalls++;
     console.log("API calls so far: " + countApiCalls)
