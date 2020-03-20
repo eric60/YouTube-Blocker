@@ -2,5 +2,8 @@ function save_options() {
     alert('You have saved your options')
 }
 
-document.getElementById('save').addEventListener('click',
-    save_options);
+window.onload=function(){
+    let save = document.getElementById('save');
+    save.addEventListener('click', save_options);
+}
+
