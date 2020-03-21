@@ -38,7 +38,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     });
  }
 
-  function processYoutubeData(json, callback) {
+  function processYoutubeData(json, callbackBlockYoutubeUrl) {
     const allowedIds = ['26', '27', '28']; // video category ids for Howto & Style, Education, Science & technology
     let videoCategory = json.items[0].snippet.categoryId;
     console.log("The video category of the Youtube video is " + videoCategory);
@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     console.log('isAllowedUrl: ' + isAllowedResult);
     if(isAllowedResult == false) {
-        callback();
+        callbackBlockYoutubeUrl();
     }
   }
 
@@ -58,9 +58,10 @@ function blockYoutubeUrl() {
         console.log('Blocking Activated value: ' + data.activated)
     
         if (data.activated === true) {  
+            // Block redirecting happens here
             location.replace('http://youtube.com')
             chrome.runtime.sendMessage({createNotification: true}, function(response) {
-                console.log('create notification');
+                console.log('Send create notification to background');
             });           
         }
     });

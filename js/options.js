@@ -7,6 +7,11 @@ window.onload = function(){
     let save = document.getElementById('save');
     save.addEventListener('click', save_options);
     getApiKey();
+
+    let extensionLink = document.getElementById('extensions')
+    extensionLink.addEventListener('click', function() {
+        chrome.tabs.update({ url: 'chrome://extensions' });
+    })
 }
 
 function getApiKey() {

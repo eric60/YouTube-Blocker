@@ -34,7 +34,7 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
 // fetch request won't get a response in content script in context of web page due to Cors restritions
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if(request.createNotification == true) {
+    if(request.createNotification == true) { // content script already redirected page and blocked the url
         let message = "You were watching a non educational youtube video so you were redirected to the homepage.\nOnly Education, Science & Technology, or Howto & Style videos are allowed."
         showNotification(message);
     } else {
