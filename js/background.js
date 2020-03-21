@@ -1,8 +1,21 @@
 let activated;
-const API_KEY_1 = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
+const DEFAULT_API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
 const API_KEY_2 = "AIzaSyA5JFptzkrMDka_3W93nPCTtdFD-CRRJVQ";
+const USER_API_KEY = ""
 let apiKeysQueue = []
 let countApiCalls = 0;
+
+
+chrome.storage.local.get('apiKey', function(data) {
+    if(data.apiKey === undefined) {
+      $('#startButton').hide();
+    } else if(data.apiKey == ""){
+        USER_API_KEY = DEFAULT_API_KEY;
+    } else {
+      console.log('Local storage api key value:' + data.apiKey)
+      USER_API_KEY = data.apiKey
+    }
+})
 
 
 // notifiy content script when youtube dynamically updates DOM

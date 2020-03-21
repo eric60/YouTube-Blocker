@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Test Extension Options</title>
+    <title>Youtube Study Options</title>
     <script src="js/options.js"></script>
     <script src="bootstrap/bootstrap.min.js"></script>
     <script src="js/jquery-3.4.1.min.js"></script>
@@ -23,15 +23,14 @@
             <li>Copy and paste your new personal API key in the input below to register it to the extension. It will be a long text key like this: <b>AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG</b></li>
         </ol>
         <label>
-            Set your API key
+            Set your API key.
             <input type="text" id="API_KEY">
         </label>
-        <br></br>
-        <label for="defaultKey">
-            Or use default Key. WARNING: Will run out if more than 3 users so you must create a key.
-        </label>
-        <input type="checkbox" id="defaultKey">
         <span><button class="btn btn-primary" id="save">Save</button></span>
-
+        <br></br>
+        <p>
+            Leave blank and save to use default key. <b>WARNING: Key will reach its limit and not work if there are more than 5 users so please set your own key.</b>
+        </p>
+        </label>        
     </body>
 </html>
