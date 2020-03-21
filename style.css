@@ -1,11 +1,12 @@
 body{
     font-family: 'Roboto', sans-serif;
     text-align: center;
-    height: 310px;
+    height: 320px;
     width: 240px;
     margin: 15px;
     padding-bottom: 10px;
 }
+
 
 img{
   margin-top: -10px;

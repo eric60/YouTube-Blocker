@@ -1,6 +1,5 @@
 let activated;
 const DEFAULT_API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
-const API_KEY_2 = "AIzaSyA5JFptzkrMDka_3W93nPCTtdFD-CRRJVQ";
 const USER_API_KEY = ""
 let apiKeysQueue = []
 let countApiCalls = 0;
@@ -10,7 +9,9 @@ chrome.storage.local.get('apiKey', function(data) {
     if(data.apiKey === undefined) {
       $('#startButton').hide();
     } else if(data.apiKey == ""){
+      console.log('trigger empty key')
         USER_API_KEY = DEFAULT_API_KEY;
+        $('#warning').show();
     } else {
       console.log('Local storage api key value:' + data.apiKey)
       USER_API_KEY = data.apiKey
@@ -53,8 +54,11 @@ chrome.runtime.onMessage.addListener(
     console.log("API error trigger")
     let message = json.error.message;
     console.log(message)
-    let showingMessage = "Sorry but the Youtube API daily limit quota of 10,000 was exceeded so this extension will not block videos anymore. It will reset at midnight PT/3 am EST"
-    $('.errorMessage').text(showingMessage)
+    let showingMessage = "Your Youtube key is invalid. Please make sure it is correct in the options page"
+    if(message.indexOf('Bad Request') == -1) {
+      console.log('Not bad request error')
+      showingMessage = "The Youtube key call limit was reached so it will not block videos anymore. It will reset at midnight PT/3 am EST. You can create a new key in the options page."
+    }
     showNotification(showingMessage)
   }
 
@@ -66,7 +70,7 @@ chrome.runtime.onMessage.addListener(
        return; // If URL is NOT a Youtube video then return true
     }
 
-    const restAPI = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY_2}&fields=items(snippet(categoryId))`
+    const restAPI = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${USER_API_KEY}&fields=items(snippet(categoryId))`
 
     countApiCalls++;
     console.log("API calls so far: " + countApiCalls)
@@ -118,7 +122,7 @@ $(document).ready(function(){
           setActivated(false)
           deactivateJQuery();
         } else {
-          console.log('Chrome storage GET activated value is ' + data.activated)
+          console.log('local storage activated value is ' + data.activated)
           if(data.activated === false) {
             deactivateJQuery();  
           } else {
