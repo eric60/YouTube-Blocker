@@ -1,20 +1,24 @@
 let activated;
 const DEFAULT_API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
-const USER_API_KEY = ""
+let USER_API_KEY = ""
 let apiKeysQueue = []
 let countApiCalls = 0;
 
 
 chrome.storage.local.get('apiKey', function(data) {
+   
     if(data.apiKey === undefined) {
       $('#startButton').hide();
+      $("#warning").hide();
     } else if(data.apiKey == ""){
       console.log('trigger empty key')
-        USER_API_KEY = DEFAULT_API_KEY;
-        $('#warning').show();
+      USER_API_KEY = DEFAULT_API_KEY;
+      $("#warning").show();
     } else {
+      $("#warning").hide();
       console.log('Local storage api key value:' + data.apiKey)
       USER_API_KEY = data.apiKey
+      console.log(USER_API_KEY)
     }
 })
 

@@ -11,10 +11,15 @@ window.onload = function(){
 
 function getApiKey() {
     chrome.storage.local.get('apiKey', function(data) {
+        let value = ""
         console.log('trigger ' + data.apiKey)
         let key = data.apiKey;
-        value = "Your current Youtube key is: " + key
-        $('#currKey').text(value)
+        if(key == "") {
+            value = "Your current Youtube key is the default key which will run out"
+        } else {
+            value = "Your current Youtube key is: <b>" + key + "</b>"
+        }
+        $('#currKey').html(value)
     })  
 }
 
