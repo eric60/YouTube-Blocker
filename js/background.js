@@ -18,7 +18,6 @@ chrome.storage.local.get('apiKey', function(data) {
       $("#warning").hide();
       console.log('Local storage api key value:' + data.apiKey)
       USER_API_KEY = data.apiKey
-      console.log(USER_API_KEY)
     }
 })
 
