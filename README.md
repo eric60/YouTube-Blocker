@@ -1,4 +1,4 @@
-# Chrome Extension - YouTube Study
+# YouTube Study Chrome Extension
 <img src="https://github.com/erics98/ChromeExtension/blob/master/icon.png" width="130" height="100">
 
 ## Application Purpose
