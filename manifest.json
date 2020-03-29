@@ -22,6 +22,7 @@
   "default_popup": "popup.html"
 },
 "content_security_policy": "script-src 'self' https://ajax.googleapis.com https://www.googleapis.com; object-src 'self'",
+"options_page": "options.html",
 "permissions": [
   "notifications",
   "storage",

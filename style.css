@@ -1,11 +1,12 @@
 body{
     font-family: 'Roboto', sans-serif;
     text-align: center;
-    height: 310px;
+    height: 330px;
     width: 240px;
     margin: 15px;
     padding-bottom: 10px;
 }
+
 
 img{
   margin-top: -10px;
@@ -65,4 +66,8 @@ h1{
 
 #startButton:hover {
   background-color: #3e8e41
+}
+
+#warning {
+  color:red;
 }
