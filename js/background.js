@@ -173,7 +173,7 @@ $(document).ready(function(){
   function setActivated(value) {
     chrome.storage.local.set({activated : value}, function(){
       console.log('You set chrome storage activated value to ' + value)
-      if(chrome.runtime.lastError) {
+      if (chrome.runtime.lastError) {
         throw Error(chrome.runtime.lastError);
       }
    })
@@ -183,7 +183,7 @@ $(document).ready(function(){
   let clicks = 0;
   if (harderDeactivate == false) {
     $('#startButton').on("click", function() {
-      if(!activated) {
+      if (!activated) {
         activateAction();
       } 
       else {
@@ -194,7 +194,7 @@ $(document).ready(function(){
   } 
   else {
     $('#startButton').on("click", function() {
-      if(!activated) {
+      if (!activated) {
         activateWhenDeactivateHarderAction();
       } 
       else {
@@ -236,8 +236,8 @@ $(document).ready(function(){
   function deactivateAction() {
     if(confirm('Are you sure you really need to deactivate?')) {
        deactivateJQuery();
+       activated = !activated
     }
-    activated = !activated
   }
 
   function activateWhenDeactivateHarderJQuery() {
