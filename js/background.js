@@ -1,4 +1,5 @@
 let activated;
+let harderDeactivate;
 const DEFAULT_API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
 let USER_API_KEY = ""
 let apiKeysQueue = []
@@ -107,7 +108,9 @@ chrome.runtime.onMessage.addListener(
 
 
 $(document).ready(function(){
-  getActivated();
+  initiateHarderToDeactivateActions();
+  initiateActivatedValueActions();
+  
 
   $('#go-to-options').on('click', function() {
     if (chrome.runtime.openOptionsPage) {
@@ -118,17 +121,48 @@ $(document).ready(function(){
     }
   });
 
-  function getActivated() {
+  $('#harderDeactivate').mousedown(function() {
+    if (!$(this).is(':checked')) {
+      setHarderDeactivateValue(true)
+    } else {
+      setHarderDeactivateValue(false)
+    }
+  });
+
+  function setHarderDeactivateValue(value) {
+    chrome.storage.local.set({harderDeactivate : value}, function(){
+      console.log('set deactivate harder value to ' + value)
+    })
+  }
+
+  function initiateHarderToDeactivateActions() {
+    chrome.storage.local.get('harderDeactivate', function(data) {
+      if(data.harderDeactivate == true) {
+        $('#harderDeactivate').prop('checked', true);
+      }
+      harderDeactivate = data.harderDeactivate;
+      console.log('harderDeactivate value is ' + data.harderDeactivate)
+    }); 
+  }
+
+  function initiateActivatedValueActions() {
     chrome.storage.local.get('activated', function(data) {
         if(data.activated === undefined) {
           activated = false
           setActivated(false)
           deactivateJQuery();
-        } else {
+        } 
+        else {
           console.log('local storage activated value is ' + data.activated)
           if(data.activated === false) {
             deactivateJQuery();  
-          } else {
+          } 
+          else if(harderDeactivate == true && data.activated == true) {
+            console.log('trigger 1');
+            activateWhenDeactivateHarderJQuery();
+          }
+          else {
+            console.log('trigger 2')
             activateJQuery();
           }
           activated = data.activated;
@@ -145,24 +179,33 @@ $(document).ready(function(){
    })
   }
 
-  $('#startButton').on("click", function() {
-    if(!activated) {
-      activateAction();
 
-      // refresh tab
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        console.log(tabs[0].url);
-        let url = tabs[0].url;
-        if(url.search("youtube.com") != -1) {
-          chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
-        }
-      });
-    } 
-    else {
-        deactivateAction();
-    }
-    setActivated(activated)
-  });
+  let clicks = 0;
+  if (harderDeactivate == false) {
+    $('#startButton').on("click", function() {
+      if(!activated) {
+        activateAction();
+      } 
+      else {
+          deactivateAction();
+      }
+      setActivated(activated)
+    });
+  } 
+  else {
+    $('#startButton').on("click", function() {
+      if(!activated) {
+        activateWhenDeactivateHarderAction();
+      } 
+      else {
+          clicks++;
+          if(clicks == 10) {
+            deactivateAction();
+          }
+      }
+      setActivated(activated)
+    });
+  }
 
 
   function activateJQuery() {
@@ -174,6 +217,14 @@ $(document).ready(function(){
   function activateAction() {
     activateJQuery()
     activated = !activated
+    // refresh tab
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      console.log(tabs[0].url);
+      let url = tabs[0].url;
+      if(url.search("youtube.com") != -1) {
+        chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
+      }
+    });
   }
 
   function deactivateJQuery() {
@@ -186,6 +237,16 @@ $(document).ready(function(){
     if(confirm('Are you sure you really need to deactivate?')) {
        deactivateJQuery();
     }
+    activated = !activated
+  }
+
+  function activateWhenDeactivateHarderJQuery() {
+    $('#startButton').css('background-color','#f44336')
+    $('#startButton').text("Click 10 times to Deactivate")
+  }
+
+  function activateWhenDeactivateHarderAction() {
+    activateWhenDeactivateHarderJQuery();
     activated = !activated
   }
 
