@@ -160,6 +160,7 @@ $(document).ready(function(){
           else if(harderDeactivate == true && data.activated == true) {
             console.log('trigger 1');
             activateWhenDeactivateHarderJQuery();
+            $('#harderDeactivate').hide();
           }
           else {
             console.log('trigger 2')
@@ -199,9 +200,11 @@ $(document).ready(function(){
       } 
       else {
           clicks++;
-          if(clicks == 10) {
+          console.log(clicks)
+          if(clicks % 10 == 0) {
             deactivateAction();
           }
+          return;
       }
       setActivated(activated)
     });
@@ -238,11 +241,13 @@ $(document).ready(function(){
        deactivateJQuery();
        activated = !activated
     }
+    $('#harderDeactivate').show();
   }
 
   function activateWhenDeactivateHarderJQuery() {
     $('#startButton').css('background-color','#f44336')
     $('#startButton').text("Click 10 times to Deactivate")
+    $('#harderDeactivate').hide();
   }
 
   function activateWhenDeactivateHarderAction() {
