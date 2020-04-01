@@ -8,7 +8,7 @@ YouTube Study blocks YouTube videos not in the Education, Science & Technology, 
 * Chrome Extension API
 * Youtube Data API
 
-## [Chrome Store Download](https://www.google.com)
+## [Chrome Store Download](https://chrome.google.com/webstore/detail/youtube-study/oohcfepaadomnocmmkejhnfhcddpdpab?authuser=0&hl=en)
 <img src="https://github.com/eric60/YouTube-Study/blob/master/Youtube-Study-Chrome-Store.jpg">
 
 **Logo was made in Adobe Photoshop.**
