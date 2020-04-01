@@ -201,10 +201,11 @@ $(document).ready(function(){
       else {
           clicks++;
           console.log(clicks)
-          if(clicks % 10 == 0) {
+          if(clicks % 25 == 0) {
             deactivateAction();
+          } else {
+            return;
           }
-          return;
       }
       setActivated(activated)
     });
