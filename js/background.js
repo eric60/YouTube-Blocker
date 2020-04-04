@@ -201,7 +201,7 @@ $(document).ready(function(){
       else {
           clicks++;
           console.log(clicks)
-          if(clicks % 25 == 0) {
+          if(clicks % 50 == 0) {
             deactivateAction();
           } else {
             return;
@@ -247,7 +247,7 @@ $(document).ready(function(){
 
   function activateWhenDeactivateHarderJQuery() {
     $('#startButton').css('background-color','#f44336')
-    $('#startButton').text("Click 10 times to Deactivate")
+    $('#startButton').text("Click 5- times to Deactivate")
     $('#harderDeactivate').hide();
   }
 
