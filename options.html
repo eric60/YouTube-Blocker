@@ -18,26 +18,30 @@
         <ol>
             <li>Go to <a href="https://cloud.google.com/">Google's Cloud Platform (GCP)</a> and create a free account</li>
             <li>Create a new project</li>
-            <li>Click the left top navigation menu and go to APIs and Services and create a new Youtube Data API </li>
+            <li>Click the left top navigation menu and go to <b>APIs and Services and create a new Youtube Data API</b> </li>
             <li>Click credentials in the left hand menu and click Create credentials on the page then click API key in the drop down</li>
             <li>Copy and paste your new personal API key in the input below to register it to the extension. It will be a long text key like this: <b>AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG</b></li>
         </ol>
         <p id="currKey">Your current Youtube Key is: </p>
         <label>
-            1) Set your API key then go to step 2 to finish up.
+            <b>1)</b> Set your API key then go to step 2 to finish up.
             <input type="text" id="API_KEY">
         </label>
         <span><button class="btn btn-primary" id="save">Save</button></span>
+        <p>Leave blank and save to use default key. <b>WARNING: Key will reach its limit and not work if there are more than 5 users so please set your own key.</b></p>
         <br></br>
-        <strong>2) Finally press activate in the extension. It might take 2-3 videos until the key registers so refresh the video or try another video. Ignore the warnings of an invalid key if you got it from Youtube Data.</strong>
-        <p>
-            Leave blank and save to use default key. <b>WARNING: Key will reach its limit and not work if there are more than 5 users so please set your own key.</b>
-        </p>
+        <p><b>2)</b> Finally press activate in the extension. It might take 2-3 videos until the key registers so refresh the video or try another video. 
+            Ignore the warnings of an invalid key unless it still doesn't work after 5 different Youtube videos. Then double check your key.</p>
         </label> 
         <h2>Options</h2>  
         <div>
-            <label for="harderDeactivate">Make it harder to deactivate i.e. Click 10 times to deactivate</label>
-            <input id="harderDeactivate" type="checkbox">
+            <h4>Click __ times to deactivate YouTube blocking</h4>
+            <input type="radio" id="harder10" name="harderDeactivate" value="10">
+            <label for="harder10">10</label><br>
+            <input type="radio" id="harder25" name="harderDeactivate" value="25">
+            <label for="harder25">25</label><br>
+            <input type="radio" id="harder50" name="harderDeactivate" value="50">
+            <label for="harder50">50</label><br>
           </div>     
     </body>
 </html>
