@@ -342,7 +342,8 @@ chrome.runtime.onMessage.addListener(
   }
 
   function showMakeItHarderjQuery() {
-    $('#harderDeactivateDiv').show()
+    $('#harderDeactivateText').show()
+    $('#harderDeactivate').show()
   }
 
   function warningTextjQuery() {
