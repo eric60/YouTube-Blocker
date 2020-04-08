@@ -111,7 +111,6 @@ chrome.runtime.onMessage.addListener(
 
   $('#go-to-options').on('click', function() {
     if (chrome.runtime.openOptionsPage) {
-      console.log('trigger')
       chrome.runtime.openOptionsPage();
     } else {
       window.open(chrome.runtime.getURL('options.html'));
@@ -197,50 +196,62 @@ chrome.runtime.onMessage.addListener(
    })
   }
 
+  // Start button needs to reinitialize when user sets new harderDeactivate value.
   function setHarderDeactivateValue(value) {
     chrome.storage.local.set({harderDeactivate : value}, function(){
       console.log('set deactivate harder value to ' + value)
       harderDeactivate = value;
-      handleStartButton()
+      resetStartButton()
     })
   }
 
   // =================== Handle Start button based on harderDeactivate and Activated values ===================
   let clicks = 0;
   function handleStartButton() {
-    console.log('trigger handleStartButton')
+    console.log('trigger handleStartButton. harderDeactive is: ' + harderDeactivate + "\nactivated is: " + activated)
+    
     if (harderDeactivate == false) {
-      $('#startButton').on("click", function() {
-        console.log('Inside handleStartButton harderDeactivate false')
-        if (!activated) {
-          activateAction();
-        } 
-        else {
-          deactivateAction();
-        }
-        
-      });
+      $('#startButton').on("click", buttonWhenHarderDeactivateFalse)
     } 
-    else if (harderDeactivate == true) {
-      console.log('Inside handleStartButton harderDeactivate true')
-      $('#startButton').on("click", function() {
-        if (!activated) {
-          activateWhenDeactivateHarderAction();
-        } 
-        else {
-            clicks++;
-            console.log(clicks)
-            if(clicks % harderDeactivateClicksVal == 0) {
-              deactivateAction();
-            }
-        }
-       
-      });
+    else {
+      $('#startButton').on("click", buttonWhenHarderDeactiveTrue)
     }
   }
+
+  function buttonWhenHarderDeactivateFalse() {
+    console.log('Inside handleStartButton harderDeactivate false\nactivated is: ' + activated)
+    if (activated == false) {
+      activateAction();
+    } 
+    else {
+      console.log('trigger harderDeactivefalse and activate true')
+      deactivateAction();
+    }
+  }
+  
+  function buttonWhenHarderDeactiveTrue() {
+    console.log('Inside handleStartButton harderDeactivate true')
+    if (!activated) {
+      activateWhenDeactivateHarderAction();
+    } 
+    else {
+        clicks++;
+        console.log(clicks)
+        if(clicks % harderDeactivateClicksVal == 0) {
+          deactivateAction();
+        }
+    }
+  }
+
+  function resetStartButton() {
+    console.log('Trigger resetStartButton')
+    $('#startButton').unbind('click');
+    handleStartButton()
+  }
  
-  // ================================ jQuery commond methods =================================== 
+  // ================================ jQuery and Action methods =================================== 
   function activateAction() {
+    // activated and not harderDeactive
     activateJQuery()
     activated = !activated
     setActivated(activated)
@@ -256,7 +267,6 @@ chrome.runtime.onMessage.addListener(
   }
 
   function activateJQuery() {
-    // activated and not harderDeactive
     $('#startButton').css('background-color','#f44336')
     $('#startButton').text("Deactivate")
   }
@@ -291,7 +301,7 @@ chrome.runtime.onMessage.addListener(
 
   function madeItHarderjQuery() {
     $('#harderDeactivate').hide();
-    $('#harderDeactivateText').text("Made it harder to deactivate")
+    $('#harderDeactivateText').text("You made it harder to deactivate")
   }
 
   function resetMadeItHarderjQuery() {
