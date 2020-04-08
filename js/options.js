@@ -1,7 +1,21 @@
 $(document).ready(function(){
+    let activated;
     getApiKey();
     $('#saveKey').click(save_options);
     initiateHarderToDeactivateActions();
+    initiateActivatedValueActions();
+
+    function initiateActivatedValueActions() {
+        chrome.storage.local.get('activated', function(data) {
+            if(data.activated === false) {
+                activated = false
+            } 
+            else if(data.activated == true) {
+                activated = true;
+            }
+            console.log('activated value: ' + activated)
+        })
+    }
 
     function save_options() {
         if(confirm("Are you sure you want to save this key?")) {
@@ -43,7 +57,6 @@ $(document).ready(function(){
                 setHarderDeactivateClicks("10");
             }
             else if (value == "10") {
-                console.log('trggier')
                 $("#harder10").prop("checked", true);
             }
             else if (value == "20") {
@@ -58,7 +71,10 @@ $(document).ready(function(){
     $("#saveHarderClicks").click(function() {
         let radioVal = $("input[name=clicksRadio]:checked", '#myForm').val();
         console.log(radioVal)
-        if (radioVal) {
+        if (activated) {
+            alert("You cannot change clicks options when YouTube Study is activated")
+        }
+        else if (radioVal) {
             alert("You have saved your option for " + radioVal + " clicks.");
             setHarderDeactivateClicks(radioVal);
         }
