@@ -9,15 +9,17 @@ let harderDeactivateClicksVal;
 
 chrome.storage.local.get('apiKey', function(data) {
    
-    if(data.apiKey === undefined) {
+    if (data.apiKey === undefined) {
       $('#startButton').hide();
-      $("#warning").hide();
-    } else if(data.apiKey == ""){
+      resetWarningTextjQuery();
+    } 
+    else if (data.apiKey == "") {
       console.log('trigger empty key')
       USER_API_KEY = DEFAULT_API_KEY;
-      $("#warning").show();
-    } else {
-      $("#warning").hide();
+      warningTextjQuery()
+    } 
+    else {
+      resetWarningTextjQuery();
       console.log('Local storage api key value:' + data.apiKey)
       USER_API_KEY = data.apiKey
     }
@@ -108,10 +110,7 @@ chrome.runtime.onMessage.addListener(
   }
 
 
-$(document).ready(function(){
-  initiateHarderToDeactivateActions();
-  initiateActivatedValueActions();
-  
+$(document).ready(function() {
 
   $('#go-to-options').on('click', function() {
     if (chrome.runtime.openOptionsPage) {
@@ -130,37 +129,37 @@ $(document).ready(function(){
     }
   });
 
-  function setHarderDeactivateValue(value) {
-    chrome.storage.local.set({harderDeactivate : value}, function(){
-      console.log('set deactivate harder value to ' + value)
-    })
-  }
+  // ============================== Initiating functions =========================================
+  initiateHarderToDeactivateActions();
+  initiateHarderDeactivateClicks();
+  initiateActivatedValueActions();
 
-  // initiating functions
   function initiateHarderToDeactivateActions() {
     chrome.storage.local.get('harderDeactivate', function(data) {
       if(data.harderDeactivate == true) {
         $('#harderDeactivate').prop('checked', true);
       }
       harderDeactivate = data.harderDeactivate;
-      console.log('harderDeactivate value is ' + data.harderDeactivate)
+      console.log('harderDeactivate value is ' + harderDeactivate)
     }); 
   }
 
-  (function initiateHarderDeactivateClicks() {
+  function initiateHarderDeactivateClicks() {
     chrome.storage.local.get('harderDeactivateClicks', function(data) {
         let value = data.harderDeactivateClicks;
-        if(!value) {
+        if (!value) {
           harderDeactivateClicksVal = "10";
         }
         else {
           harderDeactivateClicksVal = value;
         }
-        activateWhenDeactivateHarderJQuery()
+        if (activated && harderDeactivate) {
+          activateWhenDeactivateHarderJQuery()
+        }
         console.log('harderDeactivateClicks value is ' + value)
         console.log('harderDeactivateClicksVal set to ' + harderDeactivateClicksVal)
     }); 
-  })()
+  }
 
   function initiateActivatedValueActions() {
     chrome.storage.local.get('activated', function(data) {
@@ -172,22 +171,25 @@ $(document).ready(function(){
         else {
           console.log('activated value is ' + data.activated)
           if(data.activated === false) {
+            console.log('trigger 1')
             deactivateJQuery();  
           } 
           else if(harderDeactivate == true && data.activated == true) {
-            console.log('trigger 1');
+            console.log('trigger 2');
             activateWhenDeactivateHarderJQuery();
-            $('#harderDeactivate').hide();
+            madeItHarderjQuery();
           }
-          else {
-            console.log('trigger 2')
+          else if(data.activated == true) {
+            console.log('trigger 3')
             activateJQuery();
           }
           activated = data.activated;
+          handleStartButton();
         }
     })
   }
 
+  // ================================= Chrome Storage setters ======================================
   function setActivated(value) {
     chrome.storage.local.set({activated : value}, function(){
       console.log('You set chrome storage activated value to ' + value)
@@ -197,41 +199,50 @@ $(document).ready(function(){
    })
   }
 
-  // Handle Start button based on harderDeactivate and Activated values
-  let clicks = 0;
-  if (harderDeactivate == false) {
-    $('#startButton').on("click", function() {
-      if (!activated) {
-        activateAction();
-      } 
-      else {
-          deactivateAction();
-      }
-      setActivated(activated)
-    });
-  } 
-  else {
-    $('#startButton').on("click", function() {
-      if (!activated) {
-        activateWhenDeactivateHarderAction();
-      } 
-      else {
-          clicks++;
-          console.log(clicks)
-          if(clicks % harderDeactivateClicksVal == 0) {
-            deactivateAction();
-          } else {
-            return;
-          }
-      }
-      setActivated(activated)
-    });
+  function setHarderDeactivateValue(value) {
+    chrome.storage.local.set({harderDeactivate : value}, function(){
+      console.log('set deactivate harder value to ' + value)
+    })
+    harderDeactivate = !harderDeactivate;
   }
 
-
-  // jQuery common actions
+  // =================== Handle Start button based on harderDeactivate and Activated values ===================
+  let clicks = 0;
+  function handleStartButton() {
+    console.log('trigger handle Start Button')
+    if (harderDeactivate == false) {
+      $('#startButton').on("click", function() {
+        console.log('click 1')
+        if (!activated) {
+          activateAction();
+        } 
+        else {
+          deactivateAction();
+        }
+        
+      });
+    } 
+    else if (harderDeactivate == true) {
+      console.log('click 2')
+      $('#startButton').on("click", function() {
+        if (!activated) {
+          activateWhenDeactivateHarderAction();
+        } 
+        else {
+            clicks++;
+            console.log(clicks)
+            if(clicks % harderDeactivateClicksVal == 0) {
+              deactivateAction();
+            }
+        }
+       
+      });
+    }
+  }
+ 
+  // ================================ jQuery commond methods =================================== 
   function activateJQuery() {
-    // currently activated
+    // activated and not harderDeactive
     $('#startButton').css('background-color','#f44336')
     $('#startButton').text("Deactivate")
   }
@@ -239,6 +250,7 @@ $(document).ready(function(){
   function activateAction() {
     activateJQuery()
     activated = !activated
+    setActivated(activated)
     // refresh tab
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       console.log(tabs[0].url);
@@ -249,9 +261,8 @@ $(document).ready(function(){
     });
   }
 
-
   function deactivateJQuery() {
-    // currently deactivated
+    // deactivated
     $('#startButton').css('background-color','#4CAF50')
     $('#startButton').text("Activate")
   }
@@ -259,21 +270,43 @@ $(document).ready(function(){
   function deactivateAction() {
     if(confirm('Are you sure you really need to deactivate?')) {
        deactivateJQuery();
+       resetMadeItHarderjQuery();
        activated = !activated
+       setActivated(activated)
     }
-    $('#harderDeactivate').show();
   }
-
 
   function activateWhenDeactivateHarderJQuery() {
     $('#startButton').css({'background-color':'#f44336', 'font-size': '15px', 'width':'11em', 'height': '4em'})
     $('#startButton').text(`Click ${harderDeactivateClicksVal} times to deactivate`)
-    $('#harderDeactivate').hide();
+    madeItHarderjQuery()
   }
 
   function activateWhenDeactivateHarderAction() {
     activateWhenDeactivateHarderJQuery();
     activated = !activated
+    setActivated(activated)
+  }
+
+  function madeItHarderjQuery() {
+    $('#harderDeactivate').hide();
+    $('#harderDeactivateText').text("Made it harder to deactivate")
+  }
+
+  function resetMadeItHarderjQuery() {
+    $('#harderDeactivate').show();
+    $('#harderDeactivateText').text("Make it harder to deactivate")
+    $('#startButton').css({'font-size': '17px', 'width':'9em', 'height': '3em'})
+  }
+
+  function warningTextjQuery() {
+    $("#warning").show();
+    $('body').css({'height':'360px'});
+  }
+
+  function resetWarningTextjQuery() {
+    $("#warning").hide();
+    $('body').css({'height':'330px'});
   }
 
 });
