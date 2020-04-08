@@ -27,21 +27,21 @@
             <b>1)</b> Set your API key then go to step 2 to finish up.
             <input type="text" id="API_KEY">
         </label>
-        <span><button class="btn btn-primary" id="save">Save</button></span>
-        <p>Leave blank and save to use default key. <b>WARNING: Key will reach its limit and not work if there are more than 5 users so please set your own key.</b></p>
-        <br></br>
+        <span><button class="btn btn-primary" id="saveKey">Save</button></span>
+        <p>Or leave blank and save to use default key. <b>WARNING: Key will reach its limit and not work if there are more than 5 users so please set your own key.</b></p>
         <p><b>2)</b> Finally press activate in the extension. It might take 2-3 videos until the key registers so refresh the video or try another video. 
             Ignore the warnings of an invalid key unless it still doesn't work after 5 different Youtube videos. Then double check your key.</p>
         </label> 
         <h2>Options</h2>  
         <div>
             <h4>Click __ times to deactivate YouTube blocking</h4>
-            <input type="radio" id="harder10" name="harderDeactivate" value="10">
+            <input type="radio" id="harder10" name="harderDeactivateClicks" value="10">
             <label for="harder10">10</label><br>
-            <input type="radio" id="harder25" name="harderDeactivate" value="25">
-            <label for="harder25">25</label><br>
-            <input type="radio" id="harder50" name="harderDeactivate" value="50">
-            <label for="harder50">50</label><br>
+            <input type="radio" id="harder20" name="harderDeactivateClicks" value="20">
+            <label for="harder20">20</label><br>
+            <input type="radio" id="harder30" name="harderDeactivateClicks" value="30">
+            <label for="harder30">30</label><br>
+            <button class="btn btn-primary" id="saveHarderClicks">Save</button>
           </div>     
     </body>
 </html>
