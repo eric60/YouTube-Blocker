@@ -308,7 +308,9 @@ chrome.runtime.onMessage.addListener(
     // deactivated
     $('#startButton').css('background-color','#4CAF50')
     $('#startButton').text("Activate")
-    showMakeItHarderjQuery();
+    if(activated != undefined) {
+      showMakeItHarderjQuery();
+    }
   }
 
   function activateWhenDeactivateHarderAction() {
