@@ -7,22 +7,34 @@ let countApiCalls = 0;
 let harderDeactivateClicksVal;
 
 $(document).ready(function() {
+
+  function initialSetupjQuery() {
+    $('#startButton').hide();
+    $('#text').hide();
+    clearWarningTextjQuery();
+    $("#options").text("Set your YouTube key to start blocking");
+    $('#harderDeactivateText').hide()
+    $('#harderDeactivate').hide()
+  }
+
   chrome.storage.local.get('apiKey', function(data) {
-   
     if (data.apiKey === undefined) {
-      $('#startButton').hide();
-      resetWarningTextjQuery();
-    } 
-    else if (data.apiKey == "") {
-      console.log('trigger empty key')
-      USER_API_KEY = DEFAULT_API_KEY;
-      warningTextjQuery()
+        initialSetupjQuery();
     } 
     else {
-      resetWarningTextjQuery();
-      console.log('---------------- API Key:' + data.apiKey + "----------------")
-      USER_API_KEY = data.apiKey
+      $('#harderDeactivateDiv').show()
+      if (data.apiKey == "") {
+        console.log('trigger empty key')
+        USER_API_KEY = DEFAULT_API_KEY;
+        warningTextjQuery()
+      } 
+      else {
+        clearWarningTextjQuery();
+        console.log('---------------- API Key:' + data.apiKey + "----------------")
+        USER_API_KEY = data.apiKey
+      }
     }
+    
 })
 
 
@@ -114,7 +126,7 @@ chrome.runtime.onMessage.addListener(
     function() { console.log("Last error:", chrome.runtime.lastError);})
   }
 
-  $('#go-to-options').on('click', function() {
+  $('#options').on('click', function() {
     if (chrome.runtime.openOptionsPage) {
       chrome.runtime.openOptionsPage();
     } else {
@@ -263,7 +275,10 @@ chrome.runtime.onMessage.addListener(
     activateJQuery()
     activated = !activated
     setActivated(activated)
+    refreshPage();
+  }
 
+  function refreshPage() {
     // refresh tab
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       console.log(tabs[0].url);
@@ -300,6 +315,7 @@ chrome.runtime.onMessage.addListener(
     activateWhenDeactivateHarderJQuery();
     activated = !activated
     setActivated(activated)
+    refreshPage();
   }
 
   function activateWhenDeactivateHarderJQuery() {
@@ -321,23 +337,22 @@ chrome.runtime.onMessage.addListener(
   }
 
   function hideMakeItHarderjQuery() {
-    $('#harderDeactivate').hide()
     $('#harderDeactivateText').hide()
+    $('#harderDeactivate').hide()
   }
 
   function showMakeItHarderjQuery() {
-    $('#harderDeactivate').show()
-    $('#harderDeactivateText').show()
+    $('#harderDeactivateDiv').show()
   }
 
   function warningTextjQuery() {
     $("#warning").show();
-    $('body').css({'height':'360px'});
+    $('body').css({'height':'390px'});
   }
 
-  function resetWarningTextjQuery() {
+  function clearWarningTextjQuery() {
     $("#warning").hide();
-    $('body').css({'height':'330px'});
+    $('body').css({'height':'360px'});
   }
 
 });

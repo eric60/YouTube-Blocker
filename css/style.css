@@ -1,32 +1,33 @@
-body{
+body {
     font-family: 'Roboto', sans-serif;
     text-align: center;
-    height: 330px;
+    height: 380px;
     width: 240px;
     margin: 15px;
     padding-bottom: 10px;
 }
 
-img{
+img {
   margin-top: -10px;
   border-style: none;
 }
 
-h1{
+h2 {
   font-family: 'Roboto', sans-serif;
   color:Tomato;
+  margin-bottom: 0.3em;
 }
 
-.range{
+.range {
   margin: 15px;
 }
 
-.addedElement{
+.addedElement {
   display: none;
   padding-bottom:10px;
 }
 
-#text{
+#text {
   font-size: 13px;
   width: 70%;
   margin-left: 35px;
@@ -49,7 +50,7 @@ h1{
 
 #startButton {
   margin-top: 1em;
-  margin-bottom: 1em;
+
   width: 9em;
   height: 3em;
   font-size: 17px;
@@ -72,5 +73,6 @@ h1{
 }
 
 #warning {
+  font-size: 15px;
   color:red;
 }
