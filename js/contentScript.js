@@ -25,7 +25,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
  
  function initiate() {
     let currentUrl = location.href;
-    if(prevUrls.includes(currentUrl)) {
+    if (prevUrls.includes(currentUrl)) {
         console.log('--------- Url already fetched.Not fetching again. ---------')
         return;
     }
@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log("Initiating Youtube Study for new url: " + currentUrl);
 
     chrome.runtime.sendMessage({url: currentUrl}, function(response) {
-        console.log(response.json);
+        console.log("-------Response from send url message: " + response.json + " ------------");
         processYoutubeData(response.json, blockYoutubeUrl)
     });
  }
@@ -58,10 +58,10 @@ function blockYoutubeUrl() {
         console.log('Blocking Activated value: ' + data.activated)
     
         if (data.activated === true) {  
+            console.log('---- Sent create notification to background ----');
             // Block redirecting happens here
             location.replace('http://youtube.com')
             chrome.runtime.sendMessage({createNotification: true}, function(response) {
-                console.log('Send create notification to background');
             });           
         }
     });

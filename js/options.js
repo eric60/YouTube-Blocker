@@ -45,6 +45,7 @@ $(document).ready(function(){
         chrome.storage.local.set({apiKey : key}, function(){
             console.log('set api key: ' + key)
             location.reload()
+            chrome.runtime.reload()
         })
     }
 
@@ -86,6 +87,7 @@ $(document).ready(function(){
     function setHarderDeactivateClicks(value) {
         chrome.storage.local.set({harderDeactivateClicks : value}, function(){
             console.log('Set deactivate harder clicks  to ' + value)
+            chrome.runtime.reload()
         })
     }
  }) 

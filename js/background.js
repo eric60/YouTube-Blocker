@@ -20,7 +20,7 @@ $(document).ready(function() {
     } 
     else {
       resetWarningTextjQuery();
-      console.log('Local storage api key value:' + data.apiKey)
+      console.log('---------------- API Key:' + data.apiKey + "----------------")
       USER_API_KEY = data.apiKey
     }
 })
@@ -38,16 +38,19 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
 // fetch request won't get a response in content script in context of web page due to Cors restritions
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if(request.createNotification == true) { // content script already redirected page and blocked the url
+    if (request.createNotification == true) { // content script already redirected page and blocked the url
+        console.log("trigger you were watching message\ncreatenotifciation value: " + request.createNotification)
         let message = "You were watching a non educational youtube video so you were redirected to the homepage.\nOnly Education, Science & Technology, or Howto & Style videos are allowed."
         showNotification(message);
-    } else {
+    } 
+    else if(request.url){
       console.log('request url: ' + request.url);
     
       initiateisAllowed(request.url).then(json => {
-        if(json.error) {
+        if (json.error != undefined) {
           handleYoutubeAPIError(json)
-        } else {
+        } 
+        else {
           $('.errorMessage').text("")
           sendResponse({json: json});
         }
@@ -69,7 +72,7 @@ chrome.runtime.onMessage.addListener(
     showNotification(showingMessage)
   }
 
-  async function initiateisAllowed(url, sendResponse) {
+  async function initiateisAllowed(url) {
     let videoId = parseToId(url);
     console.log('New Youtube video id:' + videoId)
 
@@ -137,8 +140,11 @@ chrome.runtime.onMessage.addListener(
     chrome.storage.local.get('harderDeactivate', function(data) {
       if(data.harderDeactivate == true) {
         $('#harderDeactivate').prop('checked', true);
+        harderDeactivate = true;
       }
-      harderDeactivate = data.harderDeactivate;
+      else {
+          harderDeactivate = false;
+      }
       console.log('harderDeactivate value is ' + harderDeactivate)
     }); 
   }
@@ -216,7 +222,7 @@ chrome.runtime.onMessage.addListener(
       $('#startButton').on("click", buttonWhenHarderDeactivateFalse)
     } 
     else {
-      $('#startButton').on("click", buttonWhenHarderDeactiveTrue)
+      $('#startButton').on("click", buttonWhenHarderDeactivateTrue)
     }
   }
 
@@ -231,7 +237,7 @@ chrome.runtime.onMessage.addListener(
     }
   }
   
-  function buttonWhenHarderDeactiveTrue() {
+  function buttonWhenHarderDeactivateTrue() {
     console.log('Inside handleStartButton harderDeactivate true')
     if (!activated) {
       activateWhenDeactivateHarderAction();
@@ -253,7 +259,7 @@ chrome.runtime.onMessage.addListener(
  
   // ================================ jQuery and Action methods =================================== 
   function activateAction() {
-    // activated and not harderDeactive
+    // activated and not harderDeactivate
     activateJQuery()
     activated = !activated
     setActivated(activated)
@@ -271,6 +277,7 @@ chrome.runtime.onMessage.addListener(
   function activateJQuery() {
     $('#startButton').css('background-color','#f44336')
     $('#startButton').text("Deactivate")
+    hideMakeItHarderjQuery();
   }
 
   function deactivateAction() {
@@ -286,6 +293,7 @@ chrome.runtime.onMessage.addListener(
     // deactivated
     $('#startButton').css('background-color','#4CAF50')
     $('#startButton').text("Activate")
+    showMakeItHarderjQuery();
   }
 
   function activateWhenDeactivateHarderAction() {
@@ -310,6 +318,16 @@ chrome.runtime.onMessage.addListener(
     $('#harderDeactivate').show();
     $('#harderDeactivateText').text("Make it harder to deactivate")
     $('#startButton').css({'font-size': '17px', 'width':'9em', 'height': '3em'})
+  }
+
+  function hideMakeItHarderjQuery() {
+    $('#harderDeactivate').hide()
+    $('#harderDeactivateText').hide()
+  }
+
+  function showMakeItHarderjQuery() {
+    $('#harderDeactivate').show()
+    $('#harderDeactivateText').show()
   }
 
   function warningTextjQuery() {
