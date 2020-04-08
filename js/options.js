@@ -33,7 +33,7 @@ $(document).ready(function(){
                 value = "Your current Youtube key is the default key which will run out"
             } 
             else {
-                value = "Your current Youtube key is: <b>" + key + "</b>"
+                value = "Your current Youtube key is: <b id='key'>" + key + "</b>"
             }
             $('#currKey').html(value)
         })  
