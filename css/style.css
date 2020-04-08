@@ -67,6 +67,10 @@ h1{
   background-color: #3e8e41
 }
 
+#startButton:focus {
+  outline: 0;
+}
+
 #warning {
   color:red;
 }

@@ -4,7 +4,7 @@
 "manifest_version": 2,
 "description": "Block non educational YouTube videos",
 "icons": {
-  "128": "icon.png"
+  "128": "resources/icon.png"
 },
 "background": {
   "scripts": ["js/jquery-3.4.1.min.js","js/background.js"],
@@ -19,10 +19,10 @@
 ],
 "browser_action": {
   "default_title": "YouTube Study",
-  "default_popup": "popup.html"
+  "default_popup": "pages/popup.html"
 },
 "content_security_policy": "script-src 'self' https://ajax.googleapis.com https://www.googleapis.com; object-src 'self'",
-"options_page": "options.html",
+"options_page": "pages/options.html",
 "permissions": [
   "notifications",
   "storage",
