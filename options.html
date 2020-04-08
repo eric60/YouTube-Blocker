@@ -2,9 +2,9 @@
 <html>
 <head>
     <title>Youtube Study Options</title>
-    <script src="js/options.js"></script>
-    <script src="bootstrap/bootstrap.min.js"></script>
     <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="bootstrap/bootstrap.min.js"></script>
+    <script src="js/options.js"></script>
     <link rel="stylesheet" type="text/css" href="optionsStyle.css">
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
 </head>
@@ -14,7 +14,7 @@
             key. The shared key will reach its limit if more than 5 people are using it, so please create a key and you won't run out of 
             calls.
         </p>
-        <h2>Instructions to Setup Key</h2>
+        <h2>Instructions to Setup a Free Key</h2>
         <ol>
             <li>Go to <a href="https://cloud.google.com/">Google's Cloud Platform (GCP)</a> and create a free account</li>
             <li>Create a new project</li>
@@ -29,19 +29,16 @@
         </label>
         <span><button class="btn btn-primary" id="saveKey">Save</button></span>
         <p>Or leave blank and save to use default key. <b>WARNING: Key will reach its limit and not work if there are more than 5 users so please set your own key.</b></p>
-        <p><b>2)</b> Finally press activate in the extension. It might take 2-3 videos until the key registers so refresh the video or try another video. 
+        <p><b>2)</b> Finally press activate in the extension. It might take 2-3 videos until the key registers so refresh the video or try another video until it works.
             Ignore the warnings of an invalid key unless it still doesn't work after 5 different Youtube videos. Then double check your key.</p>
         </label> 
         <h2>Options</h2>  
-        <div>
+        <form id="myForm">
             <h4>Click __ times to deactivate YouTube blocking</h4>
-            <input type="radio" id="harder10" name="harderDeactivateClicks" value="10">
-            <label for="harder10">10</label><br>
-            <input type="radio" id="harder20" name="harderDeactivateClicks" value="20">
-            <label for="harder20">20</label><br>
-            <input type="radio" id="harder30" name="harderDeactivateClicks" value="30">
-            <label for="harder30">30</label><br>
+            <input type="radio" id="harder10" name="clicksRadio" value="10"> 10<br>
+            <input type="radio" id="harder20" name="clicksRadio" value="20"> 20<br>
+            <input type="radio" id="harder30" name="clicksRadio" value="30"> 30<br>
             <button class="btn btn-primary" id="saveHarderClicks">Save</button>
-          </div>     
+        </form>     
     </body>
 </html>
