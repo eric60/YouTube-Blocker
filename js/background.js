@@ -6,8 +6,8 @@ let apiKeysQueue = []
 let countApiCalls = 0;
 let harderDeactivateClicksVal;
 
-
-chrome.storage.local.get('apiKey', function(data) {
+$(document).ready(function() {
+  chrome.storage.local.get('apiKey', function(data) {
    
     if (data.apiKey === undefined) {
       $('#startButton').hide();
@@ -109,9 +109,6 @@ chrome.runtime.onMessage.addListener(
     chrome.notifications.create('Youtube Study', options, function() { console.log("Last error:", chrome.runtime.lastError);})
   }
 
-
-$(document).ready(function() {
-
   $('#go-to-options').on('click', function() {
     if (chrome.runtime.openOptionsPage) {
       console.log('trigger')
@@ -122,10 +119,11 @@ $(document).ready(function() {
   });
 
   $('#harderDeactivate').mousedown(function() {
-    if (!$(this).is(':checked')) {
-      setHarderDeactivateValue(true)
-    } else {
+    if ($(this).is(':checked')) {
       setHarderDeactivateValue(false)
+    } 
+    else {
+      setHarderDeactivateValue(true)
     }
   });
 
@@ -170,22 +168,22 @@ $(document).ready(function() {
         } 
         else {
           console.log('activated value is ' + data.activated)
-          if(data.activated === false) {
+          if (data.activated === false) {
             console.log('trigger 1')
             deactivateJQuery();  
           } 
-          else if(harderDeactivate == true && data.activated == true) {
+          else if (harderDeactivate == true && data.activated == true) {
             console.log('trigger 2');
             activateWhenDeactivateHarderJQuery();
             madeItHarderjQuery();
           }
-          else if(data.activated == true) {
+          else if (data.activated == true) {
             console.log('trigger 3')
             activateJQuery();
           }
           activated = data.activated;
-          handleStartButton();
         }
+        handleStartButton();
     })
   }
 
@@ -202,17 +200,18 @@ $(document).ready(function() {
   function setHarderDeactivateValue(value) {
     chrome.storage.local.set({harderDeactivate : value}, function(){
       console.log('set deactivate harder value to ' + value)
+      harderDeactivate = value;
+      handleStartButton()
     })
-    harderDeactivate = !harderDeactivate;
   }
 
   // =================== Handle Start button based on harderDeactivate and Activated values ===================
   let clicks = 0;
   function handleStartButton() {
-    console.log('trigger handle Start Button')
+    console.log('trigger handleStartButton')
     if (harderDeactivate == false) {
       $('#startButton').on("click", function() {
-        console.log('click 1')
+        console.log('Inside handleStartButton harderDeactivate false')
         if (!activated) {
           activateAction();
         } 
@@ -223,7 +222,7 @@ $(document).ready(function() {
       });
     } 
     else if (harderDeactivate == true) {
-      console.log('click 2')
+      console.log('Inside handleStartButton harderDeactivate true')
       $('#startButton').on("click", function() {
         if (!activated) {
           activateWhenDeactivateHarderAction();
@@ -241,16 +240,11 @@ $(document).ready(function() {
   }
  
   // ================================ jQuery commond methods =================================== 
-  function activateJQuery() {
-    // activated and not harderDeactive
-    $('#startButton').css('background-color','#f44336')
-    $('#startButton').text("Deactivate")
-  }
-
   function activateAction() {
     activateJQuery()
     activated = !activated
     setActivated(activated)
+
     // refresh tab
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       console.log(tabs[0].url);
@@ -261,10 +255,10 @@ $(document).ready(function() {
     });
   }
 
-  function deactivateJQuery() {
-    // deactivated
-    $('#startButton').css('background-color','#4CAF50')
-    $('#startButton').text("Activate")
+  function activateJQuery() {
+    // activated and not harderDeactive
+    $('#startButton').css('background-color','#f44336')
+    $('#startButton').text("Deactivate")
   }
 
   function deactivateAction() {
@@ -276,16 +270,23 @@ $(document).ready(function() {
     }
   }
 
-  function activateWhenDeactivateHarderJQuery() {
-    $('#startButton').css({'background-color':'#f44336', 'font-size': '15px', 'width':'11em', 'height': '4em'})
-    $('#startButton').text(`Click ${harderDeactivateClicksVal} times to deactivate`)
-    madeItHarderjQuery()
+  function deactivateJQuery() {
+    // deactivated
+    $('#startButton').css('background-color','#4CAF50')
+    $('#startButton').text("Activate")
   }
 
   function activateWhenDeactivateHarderAction() {
     activateWhenDeactivateHarderJQuery();
     activated = !activated
     setActivated(activated)
+  }
+
+  function activateWhenDeactivateHarderJQuery() {
+    console.log('trigger jquery')
+    $('#startButton').css({'background-color':'#f44336', 'font-size': '15px', 'width':'11em', 'height': '4em'})
+    $('#startButton').text(`Click ${harderDeactivateClicksVal} times to deactivate`)
+    madeItHarderjQuery()
   }
 
   function madeItHarderjQuery() {
