@@ -26,7 +26,7 @@ $(document).ready(function() {
 })
 
 
-// notifiy content script when youtube dynamically updates DOM
+// notifiy content script when youtube dynamically updates DOM to prevent re fetching API
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
   console.log('page updated')
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -99,14 +99,16 @@ chrome.runtime.onMessage.addListener(
   }
 
   function showNotification(message) {
+    console.log("trigger notification")
     let options = {
         type: 'basic', 
-        iconUrl: 'icon.png', 
+        iconUrl: '../resources/icon.png', 
         title: "Youtube Study", 
         message: message,
         requireInteraction: true
     }
-    chrome.notifications.create('Youtube Study', options, function() { console.log("Last error:", chrome.runtime.lastError);})
+    chrome.notifications.create('Youtube Study', options, 
+    function() { console.log("Last error:", chrome.runtime.lastError);})
   }
 
   $('#go-to-options').on('click', function() {
