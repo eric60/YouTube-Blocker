@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Youtube Study Options</title>
+    <script src="../js/jquery-3.4.1.min.js"></script>
+    <script src="../css/bootstrap/bootstrap.min.js"></script>
+    <script src="../js/options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/optionsStyle.css">
+    <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
+</head>
+    <body class="container">
+        <h1>Set your Personal Youtube Key and Never Run Out</h1>
+        <p>You can create a Youtube key for your own personal use so the extension knows what videos to block or you can use the shared
+            key. The shared key will reach its limit if more than 5 people are using it, so please create a key and you won't run out of 
+            calls.
+        </p>
+        <h2>Instructions to Setup a Free Key</h2>
+        <ol>
+            <li>Go to <a href="https://cloud.google.com/">Google's Cloud Platform (GCP)</a> and create a free account</li>
+            <li>Create a new project</li>
+            <li>Click the left top navigation menu and go to <b>APIs and Services and create a new Youtube Data API</b> </li>
+            <li>Click credentials in the left hand menu and click Create credentials on the page then click API key in the drop down</li>
+            <li>Copy and paste your new personal API key in the input below to register it to the extension. It will be a long text key like this: <b>AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG</b></li>
+        </ol>
+        <p id="currKey">Your current Youtube Key is: </p>
+        <label>
+            <b>Final Step 6.</b> Set your API key then press activate on the extension. 
+            <br>Refresh the video if it 
+            doesn't work right away. Double check your key is correct if doesn't work after 5 refreshes.
+
+            <input type="text" id="API_KEY">
+        </label>
+        <button class="btn btn-primary" id="saveKey">Save</button>
+        <p>Or leave blank and save to use default key. <b>WARNING: Key will reach its limit and not work if there are more than 5 users so please set your own key.</b></p>
+        
+        <h2>Options</h2>  
+        <form id="myForm">
+            <h4>Click __ times to deactivate YouTube blocking</h4>
+            <input type="radio" id="harder10" name="clicksRadio" value="10"> 10<br>
+            <input type="radio" id="harder20" name="clicksRadio" value="20"> 20<br>
+            <input type="radio" id="harder30" name="clicksRadio" value="30"> 30<br>
+            <button class="btn btn-primary" id="saveHarderClicks">Save</button>
+        </form>     
+    </body>
+</html>

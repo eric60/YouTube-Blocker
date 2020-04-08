@@ -7,7 +7,6 @@ body{
     padding-bottom: 10px;
 }
 
-
 img{
   margin-top: -10px;
   border-style: none;
@@ -66,6 +65,10 @@ h1{
 
 #startButton:hover {
   background-color: #3e8e41
+}
+
+#startButton:focus {
+  outline: 0;
 }
 
 #warning {
