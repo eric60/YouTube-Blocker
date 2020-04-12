@@ -5,6 +5,7 @@ let category;
 let observer;
 let prevUrls = [];
 let url;
+let reinitiateCnt = 0;
 
 function initiateMutationObserver() {
     MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
@@ -28,11 +29,11 @@ chrome.storage.local.get(['activated'], function(data) {
     activated = data.activated;  
 
     if (activated == true) {
-        console.log('Blocking is activated. Initiating blocking')
-        $(document).ready(initiate)
+        console.log('Initiating YouTube Study blocking')
+        initiate()
     } 
     else {
-        console.log('Blocking not activated. Not initiating')
+        console.log('YouTube Study blocking not activated. Not initiating')
     }
 });
 
@@ -62,7 +63,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
  */
  function initiate() {
     url = window.location.href;
-    excludeDuplicateUrls(url)
+    // excludeDuplicateUrls(url)
     console.log(prevUrls)
     if (!isYoutubeVideo(url)) {
         console.log("Not youtube video")
@@ -70,31 +71,40 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     } 
     else {
         console.log("Initiating Youtube Study for " + url);
+        clickMoreTrigger()
+    }
+ }
 
-        $(document).ready(function() {
-            let running = true;
-            let cnt = 0;
-         
-            while (running) {
-                running = false;
-                try {
-                    setTimeout(clickMoreToExposeCategory, 1000)
-                    setTimeout(getCategory, 1000)
+ function clickMoreTrigger() {
+    $(document).ready(function() {
+        let running = true;
+        let cnt = 0;
+     
+        while (running) {
+            running = false;
+            try {
+                setTimeout(clickMoreToExposeCategory, 1000)
+            } catch (err) {                         
+                cnt++;
+                if(cnt < 4) {
+                    running = true                     
                 }
-                catch (err) {                         
-                    cnt++;
-                    if(cnt < 3) {
-                        running = true                     
-                    }
-                    else {
-                        // window.location.reload()
-                    }
-                    console.log("running cnt: " + cnt)
-                    console.log(err)
-                }
+                else {
+                    chrome.runtime.sendMessage({createNotification: false})
+                }                    
+                console.log("running cnt: " + cnt)
+                console.log(err)
             }
-  
-        })
+        }
+
+    })
+ }
+
+ function clickMoreToExposeCategory() {
+    let result = document.querySelector("paper-button#more").click()
+    console.log("triggered click more: " + result)
+    if (result == undefined) {
+        setTimeout(getCategory, 500)
     }
  }
 
@@ -106,20 +116,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return true
  }
 
- function clickMoreToExposeCategory() {
-    let result = document.querySelector("paper-button#more").click()
-    console.log("triggered click more: " + result)
- }
-
  function getCategory() {
      try {
         category = document.getElementById("collapsible").getElementsByTagName("a")[0].text
         console.log('triggered getCategory: ' + category)
         processYoutubeCategory()
      } catch(err) {
-        console.log(err)
-        chrome.runtime.sendMessage({createNotification: false})
+         console.log('Error getting category. Did not click More properly. Reinitiating.')
+         initiate()
      }
+   
  }
 
 function processYoutubeCategory() {
@@ -139,15 +145,8 @@ function processYoutubeCategory() {
 
 function blockYoutubeUrl() {
     console.log('in blockYoutubeUrl')
-    chrome.storage.local.get(['activated'], function(data) {
-        console.log('Blocking Activated value: ' + data.activated)
-    
-        if (data.activated === true) {
-            chrome.runtime.sendMessage({createNotification: true})
-            console.log('---- Sent create notification to background ----');
-            location.replace('http://youtube.com')
-        }
-    });
+    chrome.runtime.sendMessage({createNotification: true})
+    location.replace('http://youtube.com')
 }
 
 
