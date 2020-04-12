@@ -65,11 +65,11 @@ chrome.storage.local.get(['activated'], function(data) {
     activated = data.activated;  
 
     if (activated == true) {
-        console.log('Initiating YouTube Study blocking')
+        console.log('Initiating YouTube Blocker blocking')
         initiate()
     } 
     else {
-        console.log('YouTube Study blocking not activated. Not initiating')
+        console.log('YouTube Blocker blocking not activated. Not initiating')
     }
 });
 
@@ -106,7 +106,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         return;
     } 
     else {
-        console.log("Initiating Youtube Study for " + url);
+        console.log("Initiating Youtube Blocker for " + url);
         clickMoreTrigger()
     }
  }

@@ -12,14 +12,18 @@ img {
   border-style: none;
 }
 
-h2 {
+h3 {
   font-family: 'Roboto', sans-serif;
-  color:Tomato;
+  color:#FF4136;
   margin-bottom: 0.3em;
 }
 
 .range {
   margin: 15px;
+}
+
+#options {
+  font-size: 12px;
 }
 
 .addedElement {

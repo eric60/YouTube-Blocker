@@ -35,11 +35,11 @@ chrome.runtime.onMessage.addListener(
     let options = {
         type: 'basic', 
         iconUrl: '../resources/icon.png', 
-        title: "Youtube Study", 
+        title: "Youtube Blocker", 
         message: message,
         requireInteraction: true
     }
-    chrome.notifications.create('Youtube Study', options, 
+    chrome.notifications.create('Youtube Blocker', options, 
     function() { console.log("Last error:", chrome.runtime.lastError);})
   }
 
