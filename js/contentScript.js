@@ -3,6 +3,8 @@ let firstRun = false;
 let prevUrls = [];
 let activated;
 
+console.log(document.getElementById("collapsible").getElementsByTagName("a")[0].text)
+
 chrome.storage.local.get(['activated'], function(data) {
     activated = data.activated;  
     console.log('Activated value: ' + activated)  
