@@ -1,23 +1,9 @@
 let activated;
 let harderDeactivate;
-const DEFAULT_API_KEY = "AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG1Nbkxg";
-let USER_API_KEY = ""
-let apiKeysQueue = []
-let countApiCalls = 0;
+
 let harderDeactivateClicksVal;
 
 $(document).ready(function() {
-
-  function initialSetupjQuery() {
-    $('#startButton').hide();
-    $('#text').hide();
-    clearWarningTextjQuery();
-    $("#options").text("Set your YouTube key to start blocking");
-    $('#harderDeactivateText').hide()
-    $('#harderDeactivate').hide()
-  }
-
-  
 
 
 // notifiy content script when youtube dynamically updates DOM to prevent re fetching API
@@ -34,66 +20,10 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.createNotification == true) { // content script already redirected page and blocked the url
         console.log("trigger you were watching message\ncreatenotifciation value: " + request.createNotification)
-        let message = "You were watching a non educational youtube video so you were redirected to the homepage.\nOnly Education, Science & Technology, or Howto & Style videos are allowed."
+        let message = "You were watching a non educational youtube video so you were redirected to the homepage."
         showNotification(message);
     } 
-    else if(request.url){
-      console.log('request url: ' + request.url);
-    
-      initiateisAllowed(request.url).then(json => {
-        if (json.error != undefined) {
-          handleYoutubeAPIError(json)
-        } 
-        else {
-          $('.errorMessage').text("")
-          sendResponse({json: json});
-        }
-      })
-  
-      return true; // return true to indicate you want to send a response asynchronously
-    }
 });
-
-  function handleYoutubeAPIError(json) {
-    console.log("API error trigger")
-    let message = json.error.message;
-    console.log(message)
-    let showingMessage = "Your Youtube key is invalid. Please make sure it is correct in the options page"
-    if(message.indexOf('Bad Request') == -1) {
-      console.log('Not bad request error')
-      showingMessage = "The Youtube key call limit was reached so it will not block videos anymore. It will reset at midnight PT/3 am EST. You can create a new key in the options page."
-    }
-    showNotification(showingMessage)
-  }
-
-  async function initiateisAllowed(url) {
-    let videoId = parseToId(url);
-    console.log('New Youtube video id:' + videoId)
-
-    if(videoId == null){
-       return; // If URL is NOT a Youtube video then return true
-    }
-
-    const restAPI = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${USER_API_KEY}&fields=items(snippet(categoryId))`
-
-    countApiCalls++;
-    console.log("API calls so far: " + countApiCalls)
-    const response = await fetch(restAPI);
-    console.log('--response message--')
-    console.log(response);
-
-    const json = await response.json();
-    console.log('--response json--')
-    console.log(json);
-    return json;
-  }
-
-  function parseToId(url){
-    var regEx = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
-    var match = url.match(regEx);
-
-    return (match && match[2].length == 11) ? match[2] : null; 
-  }
 
   function showNotification(message) {
     console.log("trigger notification")
@@ -329,15 +259,4 @@ chrome.runtime.onMessage.addListener(
     $('#harderDeactivateText').show()
     $('#harderDeactivate').show()
   }
-
-  function warningTextjQuery() {
-    $("#warning").show();
-    $('body').css({'height':'390px'});
-  }
-
-  function clearWarningTextjQuery() {
-    $("#warning").hide();
-    $('body').css({'height':'360px'});
-  }
-
 });
