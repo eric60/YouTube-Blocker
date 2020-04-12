@@ -1,7 +1,5 @@
 $(document).ready(function(){
     let activated;
-    getApiKey();
-    $('#saveKey').click(save_options);
     initiateHarderToDeactivateActions();
     initiateActivatedValueActions();
 
@@ -15,39 +13,7 @@ $(document).ready(function(){
             }
             console.log('activated value: ' + activated)
         })
-    }
-
-    function save_options() {
-        if(confirm("Are you sure you want to save this key?")) {
-            setApiKey()
-            alert('You have saved your options')
-        }
-    }
-    
-    function getApiKey() {
-        chrome.storage.local.get('apiKey', function(data) {
-            let value = ""
-            console.log('Key value is: ' + data.apiKey)
-            let key = data.apiKey;
-            if (key == "") {
-                value = "Your current Youtube key is the default key which will run out"
-            } 
-            else {
-                value = "Your current Youtube key is: <b id='key'>" + key + "</b>"
-            }
-            $('#currKey').html(value)
-        })  
-    }
-    
-    function setApiKey() {
-        let key = $('#API_KEY').val()
-        console.log(key)
-        chrome.storage.local.set({apiKey : key}, function(){
-            console.log('set api key: ' + key)
-            location.reload()
-            chrome.runtime.reload()
-        })
-    }
+    }    
 
     function initiateHarderToDeactivateActions() {
         chrome.storage.local.get('harderDeactivateClicks', function(data) {

@@ -17,25 +17,7 @@ $(document).ready(function() {
     $('#harderDeactivate').hide()
   }
 
-  chrome.storage.local.get('apiKey', function(data) {
-    if (data.apiKey === undefined) {
-        initialSetupjQuery();
-    } 
-    else {
-      $('#harderDeactivateDiv').show()
-      if (data.apiKey == "") {
-        console.log('trigger empty key')
-        USER_API_KEY = DEFAULT_API_KEY;
-        warningTextjQuery()
-      } 
-      else {
-        clearWarningTextjQuery();
-        console.log('---------------- API Key:' + data.apiKey + "----------------")
-        USER_API_KEY = data.apiKey
-      }
-    }
-    
-})
+  
 
 
 // notifiy content script when youtube dynamically updates DOM to prevent re fetching API
