@@ -38,6 +38,10 @@ h3 {
   width: 96%;
 }
 
+#harderDeactivateText {
+  font-size: 13px;
+}
+
 #rangeSlider{
   margin-top: 10px;
   margin: 15px;

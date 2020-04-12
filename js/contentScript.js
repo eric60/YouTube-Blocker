@@ -7,38 +7,38 @@ let prevUrls = [];
 let url;
 let reinitiateCnt = 0;
 const ytCategoryMappings = [
-     "Film & Animation",
-     "Autos & Vehicles",
-     "Music",
-     "Pets & Animals",
-     "Sports",
-     "Short Movies",
-     "Travel & Events",
-     "Gaming",
-     "Videoblogging",
-     "People & Blogs",
-     "Comedy",
-     "Entertainment",
-     "News & Politics",
-     "Howto & Style",
-     "Education",
-     "Science & Technology",
-     "Nonprofits & Activism",
-     "Movies",
-     "Anime/Animation",
-     "Action/Adventure",
-     "Classics",
-     "Comedy",
-     "Documentary",
-     "Drama",
-     "Family",
-     "Foreign",
-     "Horror",
-     "Sci-Fi/Fantasy",
-     "Thriller",
-     "Shorts",
-     "Shows",
-     "Trailers"
+    "Film & Animation",      
+    "Autos & Vehicles",      
+    "Music",      
+    "Pets & Animals",      
+    "Sports",      
+    "Short Movies",      
+    "Travel & Events",      
+    "Gaming",      
+    "Videoblogging",      
+    "People & Blogs",      
+    "Comedy",      
+    "Entertainment",      
+    "News & Politics",      
+    "Howto & Style",      
+    "Education",      
+    "Science & Technology",      
+    "Nonprofits & Activism",      
+    "Movies",      
+    "Anime/Animation",      
+    "Action/Adventure",      
+    "Classics",      
+    "Comedy",      
+    "Documentary",      
+    "Drama",      
+    "Family",      
+    "Foreign",      
+    "Horror",      
+    "Sci-Fi/Fantasy",     
+    "Thriller",      
+    "Shorts",      
+    "Shows",      
+    "Trailers"
 ]
     
     
@@ -113,35 +113,21 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
  function clickMoreTrigger() {
     $(document).ready(function() {
-        let running = true;
-        let cnt = 0;
-     
-        while (running) {
-            running = false;
-            try {
-                setTimeout(clickMoreToExposeCategory, 1000)
-            } catch (err) {                         
-                cnt++;
-                if(cnt < 4) {
-                    running = true                     
-                }
-                else {
-                    chrome.runtime.sendMessage({createNotification: false})
-                }                    
-                console.log("running cnt: " + cnt)
-                console.log(err)
-            }
-        }
-
+        setTimeout(clickMoreToExposeCategory, 1000)
     })
  }
 
  function clickMoreToExposeCategory() {
-    let result = document.querySelector("paper-button#more").click()
-    console.log("triggered click more: " + result)
-    if (result == undefined) {
-        setTimeout(getCategory, 500)
-    }
+     try {
+        let result = document.querySelector("paper-button#more").click()
+        console.log("triggered click more: " + result)
+        if (result == undefined) {
+            setTimeout(getCategory, 500)
+        }
+     } catch(err) {
+        console.log('Error ClickingMore. Reinitiating')
+        initiate()
+     }
  }
 
  function isYoutubeVideo(url) {
@@ -154,7 +140,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
  function getCategory() {
      try {
-        category = document.getElementById("collapsible").getElementsByTagName("a")[0].text
+         let collapsible = document.getElementById("collapsible").getElementsByTagName("a")
+        if (collapsible.length == 0) {
+            console.log("Trigger no collapsible div")
+            // not showing more 
+            category = document.querySelector("yt-formatted-string.content.content-line-height-override.style-scope.ytd-metadata-row-renderer")
+            .getElementsByTagName("a")[0].text
+        }
+        else {
+            // showing more collapsible div
+            category = document.getElementById("collapsible").getElementsByTagName("a")[0].text
+        }        
         console.log('triggered getCategory: ' + category)
         processYoutubeCategory()
      } catch(err) {
@@ -178,6 +174,7 @@ function processYoutubeCategory() {
 
     if (category) {
         if (!isCategoryValid(category)) {
+            console.log("category not valid")
             initiate()
         }
 
