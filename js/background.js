@@ -43,12 +43,7 @@ chrome.runtime.onMessage.addListener(
   }
 
   $('#options').on('click', function() {
-    if (chrome.runtime.openOptionsPage) {
-      chrome.runtime.openOptionsPage();
-    } 
-    else {
-      window.open(chrome.runtime.getURL('options.html'));
-    }
+      chrome.tabs.create({ url: "../pages/options.html" });
   });
 
   $('#harderDeactivate').mousedown(function() {
