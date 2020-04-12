@@ -23,6 +23,10 @@ chrome.runtime.onMessage.addListener(
         let message = "You were watching a non educational youtube video so you were redirected to the homepage."
         showNotification(message);
     } 
+    if (request.createNotification == false) { // content script already redirected page and blocked the url
+      let message = "Failed to get Youtube Category. Please refresh."
+      showNotification(message);
+  } 
 });
 
   function showNotification(message) {
@@ -41,7 +45,8 @@ chrome.runtime.onMessage.addListener(
   $('#options').on('click', function() {
     if (chrome.runtime.openOptionsPage) {
       chrome.runtime.openOptionsPage();
-    } else {
+    } 
+    else {
       window.open(chrome.runtime.getURL('options.html'));
     }
   });
