@@ -6,6 +6,42 @@ let observer;
 let prevUrls = [];
 let url;
 let reinitiateCnt = 0;
+const ytCategoryMappings = [
+     "Film & Animation",
+     "Autos & Vehicles",
+     "Music",
+     "Pets & Animals",
+     "Sports",
+     "Short Movies",
+     "Travel & Events",
+     "Gaming",
+     "Videoblogging",
+     "People & Blogs",
+     "Comedy",
+     "Entertainment",
+     "News & Politics",
+     "Howto & Style",
+     "Education",
+     "Science & Technology",
+     "Nonprofits & Activism",
+     "Movies",
+     "Anime/Animation",
+     "Action/Adventure",
+     "Classics",
+     "Comedy",
+     "Documentary",
+     "Drama",
+     "Family",
+     "Foreign",
+     "Horror",
+     "Sci-Fi/Fantasy",
+     "Thriller",
+     "Shorts",
+     "Shows",
+     "Trailers"
+]
+    
+    
 
 function initiateMutationObserver() {
     MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
@@ -128,12 +164,23 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
    
  }
 
+function isCategoryValid(category) {
+    if (!ytCategoryMappings.includes(category)) {
+        return false;
+    }
+    return true
+}
+
 function processYoutubeCategory() {
     console.log("inside processYoutube")
     console.log('------>' +  category)
     let allowedCategories = ["Education", "Science & Technology", "Howto & Style"]
 
-    if( category) {
+    if (category) {
+        if (!isCategoryValid(category)) {
+            initiate()
+        }
+
         let isAllowedResult = allowedCategories.includes(category);
         console.log('isAllowedUrl: ' + isAllowedResult);
 
@@ -145,7 +192,7 @@ function processYoutubeCategory() {
 
 function blockYoutubeUrl() {
     console.log('in blockYoutubeUrl')
-    chrome.runtime.sendMessage({createNotification: true})
+    chrome.runtime.sendMessage({createNotification: true, category: category})
     location.replace('http://youtube.com')
 }
 

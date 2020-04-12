@@ -28,15 +28,10 @@ h2 {
 }
 
 #text {
+  margin-top: 5px;
+  text-align: center;
   font-size: 13px;
-  width: 70%;
-  margin-left: 35px;
-}
-
-#addedText{
-  font-size: 15px;
-  width: 80%;
-  margin-left: 25px;
+  width: 96%;
 }
 
 #rangeSlider{

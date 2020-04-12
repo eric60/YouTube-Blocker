@@ -20,7 +20,8 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.createNotification == true) { // content script already redirected page and blocked the url
         console.log("trigger you were watching message\ncreatenotifciation value: " + request.createNotification)
-        let message = "You were watching a non educational youtube video so you were redirected to the homepage."
+        let category = request.category
+        let message = `You were watching a ${category} YouTube video so it was blocked.`
         showNotification(message);
     } 
     if (request.createNotification == false) { // content script already redirected page and blocked the url
