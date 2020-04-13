@@ -43,30 +43,39 @@ const ytCategoryMappings = [
     
     
 
-function initiateMutationObserver() {
-    MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+// function initiateMutationObserver() {
+//     MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
-    observer = new MutationObserver(function(mutations, observer) {
-        // fired when a mutation occurs
-        if(activated == true) {
-            initiate()
+//     observer = new MutationObserver(function(mutations, observer) {
+//         // fired when a mutation occurs
+//         if(activated == true) {
+//             initiate()
+//         }
+//     });
+
+//     // define what element should be observed by the observer
+//     // and what types of mutations fr the callback
+//     observer.observe(document, {
+//         subtree: true,
+//         childList: true
+//     });
+// }
+
+function getActivated() {
+    chrome.storage.local.get(['activated'], function(data) {
+        activated = data.activated;  
+        if (activated == true) {
+            console.log('--- Initiating YouTube Blocker blocking')
+            return true;
+        } 
+        else {
+            console.log('--- YouTube Blocker blocking not activated. Not initiating')
+            return false;
         }
     });
-
-    // define what element should be observed by the observer
-    // and what types of mutations fr the callback
-    observer.observe(document, {
-        subtree: true,
-        childList: true
-    });
 }
+initiate();
 
-chrome.storage.local.get(['activated'], function(data) {
-    activated = data.activated;  
-    if (activated == true) {
-        initiate()
-    } 
-});
 
 // Youtube SPA updates DOM dynamically
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {  
@@ -91,23 +100,25 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     getCategory
     processYoutubeCategory 
     BlockYoutubeUrl
+
+    check activated value before each initiate, as background may have turned activated off
+    so content needs to check each time.
  */
  function initiate() {
-    if (!activated) {
-        console.log('YouTube Blocker blocking not activated. Not initiating')
+    if (getActivated() == false) {
         return;
     }
-    console.log('Initiating YouTube Blocker blocking')
-    url = window.location.href;
-    // excludeDuplicateUrls(url)
-    console.log(prevUrls)
-    if (!isYoutubeVideo(url)) {
-        console.log("Not youtube video")
-        return;
-    } 
     else {
-        console.log("Initiating Youtube Blocker for " + url);
-        clickMoreTrigger()
+        console.log('--- inside initiate initiating')
+        url = window.location.href;
+        if (!isYoutubeVideo(url)) {
+            console.log("Not youtube video")
+            return;
+        } 
+        else {
+            console.log("Initiating Youtube Blocker for " + url);
+            clickMoreTrigger()
+        }
     }
  }
 
