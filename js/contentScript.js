@@ -98,6 +98,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     BlockYoutubeUrl
  */
  function initiate() {
+    if (!activated) {
+        console.log('YouTube Blocker blocking not activated. Not initiating')
+    }
     url = window.location.href;
     // excludeDuplicateUrls(url)
     console.log(prevUrls)
