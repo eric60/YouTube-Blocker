@@ -5,15 +5,43 @@ let harderDeactivateClicksVal;
 
 $(document).ready(function() {
 
+chrome.runtime.onInstalled.addListener(function(details) {
+  chrome.runtime.reload();
+});
 
-// notifiy content script when youtube dynamically updates DOM to prevent re fetching API
-chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
-  console.log('page updated')
+chrome.runtime.onUpdateAvailable.addListener(function(details) {
+  console.log("updating to version " + details.version);
+  chrome.runtime.reload();
+});
+
+chrome.runtime.requestUpdateCheck(function(status) {
+  if (status == "update_available") {
+    console.log("update pending...");
+  } else if (status == "no_update") {
+    console.log("no update found");
+  } else if (status == "throttled") {
+    console.log("Oops, I'm asking too frequently - I need to back off.");
+  }
+});
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  console.log("Url changed. Page updated.")
+  sendContentScriptMessage("Page updated")
+});
+
+// // notifiy content script when youtube dynamically updates DOM to prevent re fetching API
+// chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
+//   console.log('Page updated')
+//   sendContentScriptMessage("Page updated")
+//  });
+
+function sendContentScriptMessage(message) {
+  console.log("--- Sent content script message: " + message)
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {query: "Page updated"}, function(response) {
+    chrome.tabs.sendMessage(tabs[0].id, {query: message, activated: activated}, function(response) {
     });
-  });
-})
+  })
+}
 
 // fetch request won't get a response in content script in context of web page due to Cors restritions
 chrome.runtime.onMessage.addListener(
@@ -122,7 +150,8 @@ chrome.runtime.onMessage.addListener(
   // ================================= Chrome Storage setters ======================================
   function setActivated(value) {
     chrome.storage.local.set({activated : value}, function(){
-      console.log('You set chrome storage activated value to ' + value)
+      console.log('--- Set activated to: ' + value)
+      sendContentScriptMessage("Changed activated")
       if (chrome.runtime.lastError) {
         throw Error(chrome.runtime.lastError);
       }
@@ -218,7 +247,7 @@ chrome.runtime.onMessage.addListener(
   }
 
   function deactivateJQuery() {
-    // deactivated
+    // transition activated to deactivated
     $('#startButton').css('background-color','#4CAF50')
     $('#startButton').text("Activate")
     if(activated != undefined) {

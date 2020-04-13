@@ -65,35 +65,39 @@ function getActivated() {
     chrome.storage.local.get(['activated'], function(data) {
         activated = data.activated;  
         if (activated == true) {
-            console.log('--- Initiating YouTube Blocker blocking')
+            console.log('--- Activated. Initiating YouTube Blocker blocking')
             return true;
         } 
         else {
-            console.log('--- YouTube Blocker blocking not activated. Not initiating')
+            console.log('--- Not activated. Not initiating')
             return false;
         }
     });
 }
-initiate();
-
+getActivated()
 
 // Youtube SPA updates DOM dynamically
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {  
-    if (request.query === 'Page updated' && activated == true)
+    if (request.query === 'Page updated')
     {
-        console.log('Page updated');
-        initiate();
+        console.log('Page updated, Activated: ' + request.activated);
+        activated = request.activated;
+        initiate()
     }
+    else if (request.query == "Changed activated") {
+        activated = request.activated;
+    }
+    console.log("Updated activated to: " + activated)
  });
  
-//  initiateMutationObserver()
+ 
 
- function excludeDuplicateUrls(url) {
-    if (prevUrls.includes(url)) {
-        return;
-    }
-    prevUrls.push(url)
- }
+//  function excludeDuplicateUrls(url) {
+//     if (prevUrls.includes(url)) {
+//         return;
+//     }
+//     prevUrls.push(url)
+//  }
 
  /*
     clickMore
@@ -104,12 +108,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     check activated value before each initiate, as background may have turned activated off
     so content needs to check each time.
  */
- function initiate() {
-    if (getActivated() == false) {
+ function initiate(activatedVal) {
+    if (activated == false) {
         return;
     }
-    else {
-        console.log('--- inside initiate initiating')
+    if (activated == true) {
+        console.log('--- Inside initiate initiating, activated:' + activated)
         url = window.location.href;
         if (!isYoutubeVideo(url)) {
             console.log("Not youtube video")
