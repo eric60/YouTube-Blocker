@@ -63,14 +63,9 @@ function initiateMutationObserver() {
 
 chrome.storage.local.get(['activated'], function(data) {
     activated = data.activated;  
-
     if (activated == true) {
-        console.log('Initiating YouTube Blocker blocking')
         initiate()
     } 
-    else {
-        console.log('YouTube Blocker blocking not activated. Not initiating')
-    }
 });
 
 // Youtube SPA updates DOM dynamically
@@ -101,6 +96,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (!activated) {
         console.log('YouTube Blocker blocking not activated. Not initiating')
     }
+    console.log('Initiating YouTube Blocker blocking')
     url = window.location.href;
     // excludeDuplicateUrls(url)
     console.log(prevUrls)
