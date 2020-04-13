@@ -36,10 +36,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 //  });
 
 function sendContentScriptMessage(message) {
-  console.log("--- Sent content script message: " + message)
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {query: message, activated: activated}, function(response) {
     });
+    console.log("--- Sent content script message: " + message + "\nactivated: " + activated)
   })
 }
 

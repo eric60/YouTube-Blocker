@@ -62,7 +62,7 @@ const ytCategoryMappings = [
 // }
 
 function getActivated() {
-    chrome.storage.local.get(['activated'], function(data) {
+    chrome.storage.local.get('activated', function(data) {
         activated = data.activated;  
         if (activated == true) {
             console.log('--- Activated. Initiating YouTube Blocker blocking')
@@ -78,16 +78,14 @@ getActivated()
 
 // Youtube SPA updates DOM dynamically
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {  
-    if (request.query === 'Page updated')
-    {
+    if (request.query === 'Page updated') {
         console.log('Page updated, Activated: ' + request.activated);
-        activated = request.activated;
         initiate()
     }
     else if (request.query == "Changed activated") {
         activated = request.activated;
     }
-    console.log("Updated activated to: " + activated)
+    console.log("--- activated: " + activated)
  });
  
  
@@ -108,11 +106,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     check activated value before each initiate, as background may have turned activated off
     so content needs to check each time.
  */
- function initiate(activatedVal) {
+ function initiate() {
     if (activated == false) {
         return;
     }
-    if (activated == true) {
+    else if (activated == true) {
         console.log('--- Inside initiate initiating, activated:' + activated)
         url = window.location.href;
         if (!isYoutubeVideo(url)) {
