@@ -150,11 +150,21 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return true
  }
 
+ function searchCollapsibleForCategory(collapsibleArr) {
+    for (let i = 0; i < collapsibleArr.length; i++) {
+        let text = collapsibleArr[i].text
+        if (ytCategoryMappings.includes(text)) {
+            console.log(">>>>>>>> Successfully found category: " + category)
+            return text;
+        }
+    }
+    return null;
+ }
+
  function getCategory() {
      try {
         console.log("Trigger getCategory")
         let collapsible = document.getElementById("collapsible").getElementsByTagName("a")
-        let categoryIdx = collapsible.length - 1; // category will be last element in collapsible elements
         console.log('------ collapsible length: ' + collapsible.length);
 
         if (collapsible.length == 0) {
@@ -162,28 +172,40 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             console.log("Trigger no collapsible div")
 
             category = document.querySelector("yt-formatted-string.content.content-line-height-override.style-scope.ytd-metadata-row-renderer")
-            .getElementsByTagName("a")[categoryIdx].text
+            .getElementsByTagName("a")[0].text
         }
         else {
-            // showing more collapsible div, could be multiple like caption authors
-            category = document.getElementById("collapsible").getElementsByTagName("a")[categoryIdx].text
+            // showing more collapsible div, could be multiple like caption authors, song references
+            category = searchCollapsibleForCategory(collapsible) // category will be last element in collapsible elements
+            
+            if (category == null) {
+                stopInitiating();
+            }
         }        
-        console.log('triggered getCategory: ' + category)
+        console.log('----> triggered getCategory: ' + category)
         processYoutubeCategory()
      } 
      catch(err) {
          console.log(err)
-         if (reinitiateCnt % 30 == 0) {
-             console.log('Failed to get category. Stopping reinitating: ' + reinitiateCnt)
-            chrome.runtime.sendMessage({getCategoryFail: true, category: category})
+         if (reinitiateCnt % 25 == 0) {
+            stopInitiating();
          }
          else {
-            console.log('Error getting category. Possibly did not click "show more" properly. Reinitiating.')
-            initiate()
-            reinitiateCnt++;
+            handleError();
          }
      }
    
+ }
+
+ function handleError() {
+    console.log('Error getting category. Possibly did not click "show more" properly. Reinitiating.')
+    initiate()
+    reinitiateCnt++;
+ }
+
+ function stopInitiating() {
+    console.log('Failed to get category. Stopping reinitating: ' + reinitiateCnt)
+    chrome.runtime.sendMessage({getCategoryFail: true, category: category})
  }
 
 function isCategoryValid(category) {
