@@ -49,13 +49,16 @@ chrome.runtime.onMessage.addListener(
     if (request.createNotification == true) { // content script already redirected page and blocked the url
         console.log("trigger you were watching message\ncreatenotifciation value: " + request.createNotification)
         let category = request.category
-        let message = `You were watching a ${category} YouTube video so it was blocked.`
-        showNotification(message);
+        var message = `You were watching a ${category} YouTube video so it was blocked.`
     } 
-    if (request.createNotification == false) { // content script already redirected page and blocked the url
-      let message = "Failed to get Youtube Category. Please refresh."
-      showNotification(message);
-  } 
+    else if (request.createNotification == false) { // content script already redirected page and blocked the url
+      var message = "Failed to get Youtube Category. Please refresh."
+    } 
+    else if (request.getCategoryFail == true) {
+      let category = request.category
+      var message = `Failed to get valid Youtube Category: ${category}. Sorry! Please send the video url on the contact developer page so we can fix it. Thank you.`
+    }
+    showNotification(message);
 });
 
   function showNotification(message) {

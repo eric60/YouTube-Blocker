@@ -1,11 +1,9 @@
-
-let firstRun = false;
 let activated;
 let category;
 let observer;
 let prevUrls = [];
 let url;
-let reinitiateCnt = 0;
+let reinitiateCnt = 1;
 const ytCategoryMappings = [
     "Film & Animation",      
     "Autos & Vehicles",      
@@ -137,8 +135,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         if (result == undefined) {
             setTimeout(getCategory, 500)
         }
-     } catch(err) {
-        console.log('Error ClickingMore. Reinitiating')
+     } 
+     catch(err) {
+        console.log('Error Clicking More. Reinitiating')
         initiate()
      }
  }
@@ -153,28 +152,43 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
  function getCategory() {
      try {
-         let collapsible = document.getElementById("collapsible").getElementsByTagName("a")
+        console.log("Trigger getCategory")
+        let collapsible = document.getElementById("collapsible").getElementsByTagName("a")
+        let categoryIdx = collapsible.length - 1; // category will be last element in collapsible elements
+        console.log('------ collapsible length: ' + collapsible.length);
+
         if (collapsible.length == 0) {
+            // not showing 'show more' div 
             console.log("Trigger no collapsible div")
-            // not showing more 
+
             category = document.querySelector("yt-formatted-string.content.content-line-height-override.style-scope.ytd-metadata-row-renderer")
-            .getElementsByTagName("a")[0].text
+            .getElementsByTagName("a")[categoryIdx].text
         }
         else {
-            // showing more collapsible div
-            category = document.getElementById("collapsible").getElementsByTagName("a")[0].text
+            // showing more collapsible div, could be multiple like caption authors
+            category = document.getElementById("collapsible").getElementsByTagName("a")[categoryIdx].text
         }        
         console.log('triggered getCategory: ' + category)
         processYoutubeCategory()
-     } catch(err) {
-         console.log('Error getting category. Did not click More properly. Reinitiating.')
-         initiate()
+     } 
+     catch(err) {
+         console.log(err)
+         if (reinitiateCnt % 30 == 0) {
+             console.log('Failed to get category. Stopping reinitating: ' + reinitiateCnt)
+            chrome.runtime.sendMessage({getCategoryFail: true, category: category})
+         }
+         else {
+            console.log('Error getting category. Possibly did not click "show more" properly. Reinitiating.')
+            initiate()
+            reinitiateCnt++;
+         }
      }
    
  }
 
 function isCategoryValid(category) {
     if (!ytCategoryMappings.includes(category)) {
+        console.log('-------- category not valid: ' + category)
         return false;
     }
     return true
@@ -187,15 +201,15 @@ function processYoutubeCategory() {
 
     if (category) {
         if (!isCategoryValid(category)) {
-            console.log("category not valid")
-            initiate()
-        }
-
-        let isAllowedResult = allowedCategories.includes(category);
-        console.log('isAllowedUrl: ' + isAllowedResult);
-
-        if (isAllowedResult == false) {
-            blockYoutubeUrl();
+            chrome.runtime.sendMessage({getCategoryFail: true, category: category})
+        } 
+        else {
+            let isAllowedResult = allowedCategories.includes(category);
+            console.log('isAllowedUrl: ' + isAllowedResult);
+    
+            if (isAllowedResult == false) {
+                blockYoutubeUrl();
+            }
         }
     }   
 }
