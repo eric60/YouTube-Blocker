@@ -57,15 +57,9 @@ $(document).ready(function(){
                 $('#harder10').prop("checked", true);
                 setHarderDeactivateClicks("10");
             }
-            else if (value == "10") {
-                $("#harder10").prop("checked", true);
-            }
-            else if (value == "20") {
-                $('#harder20').prop("checked", true);
-            }
-            else if (value == "30") {
-                $('#harder30').prop("checked", true);
-            }
+            else {
+                $(`#harder${value}`).prop("checked", true);
+            }                      
         }); 
     }
 
