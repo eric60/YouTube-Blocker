@@ -257,7 +257,7 @@ chrome.runtime.onMessage.addListener(
     else {
         clicks++;
         console.log(clicks)
-        if(clicks % harderDeactivateClicksVal == 0) {
+        if (clicks % harderDeactivateClicksVal == 0) {
           deactivateAction();
         }
     }
