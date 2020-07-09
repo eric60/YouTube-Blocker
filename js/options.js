@@ -7,10 +7,10 @@ $(document).ready(function(){
 
     function initiateActivatedValueActions() {
         chrome.storage.local.get('activated', function(data) {
-            if(data.activated === false) {
+            if (data.activated === false) {
                 activated = false
             } 
-            else if(data.activated == true) {
+            else if (data.activated == true) {
                 activated = true;
             }
             console.log('activated value: ' + activated)
@@ -18,7 +18,7 @@ $(document).ready(function(){
     }
 
     function save_options() {
-        if(confirm("Are you sure you want to save this key?")) {
+        if (confirm("Are you sure you want to save this key?")) {
             setApiKey()
             alert('You have saved your options')
         }
@@ -45,7 +45,7 @@ $(document).ready(function(){
         chrome.storage.local.set({apiKey : key}, function(){
             console.log('set api key: ' + key)
             location.reload()
-            chrome.runtime.reload()
+            // chrome.runtime.reload()
         })
     }
 
@@ -81,7 +81,7 @@ $(document).ready(function(){
     function setHarderDeactivateClicks(value) {
         chrome.storage.local.set({harderDeactivateClicks : value}, function(){
             console.log('Set deactivate harder clicks  to ' + value)
-            chrome.runtime.reload()
+            location.reload();
         })
     }
  }) 
