@@ -50,9 +50,9 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
 // fetch request won't get a response in content script in context of web page due to Cors restritions
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if (request.createNotification == true) { // content script already redirected page and blocked the url
-        console.log("trigger you were watching message\ncreatenotifciation value: " + request.createNotification)
-        let message = "You were watching a non educational youtube video so you were redirected to the homepage.\nOnly Education, Science & Technology, or Howto & Style videos are allowed."
+    if (request.createNotification == true) { 
+        let videoCategoryString = request.videoCategoryString;
+        let message = `You were watching a ${videoCategoryString} video so it was blocked.`
         showNotification(message);
     } 
     else if (request.url){
@@ -81,7 +81,7 @@ chrome.runtime.onMessage.addListener(
     let isBadRequest = message.indexOf("not valid");
     if (!isBadRequest) {
       console.log('Not bad request error')
-      showingMessage = "The Youtube key call limit was reached so it will not block videos anymore. It will reset at midnight PT/3 am EST. You can create a new key in the options page."
+      showingMessage = "The Youtube key call limit was reached so it will not block videos anymore. It will reset at midnight PT/3 am EST. You can set a new key in the options page."
     }
     showNotification(showingMessage)
   }
@@ -90,8 +90,9 @@ chrome.runtime.onMessage.addListener(
     let videoId = parseToId(url);
     console.log('New Youtube video id:' + videoId)
 
-    if(videoId == null){
-       return; // If URL is NOT a Youtube video then return true
+    let isURLNotYoutubeVideo = videoId == null;
+    if (isURLNotYoutubeVideo){
+       return;
     }
 
     const restAPI = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${USER_API_KEY}&fields=items(snippet(categoryId))`
@@ -116,15 +117,13 @@ chrome.runtime.onMessage.addListener(
   }
 
   function showNotification(message) {
-    console.log("trigger notification")
     let options = {
         type: 'basic', 
         iconUrl: '../resources/icon.png', 
-        title: "Youtube Study", 
+        title: "Youtube Blocker", 
         message: message,
-        requireInteraction: true
     }
-    chrome.notifications.create('Youtube Study', options, 
+    chrome.notifications.create('Youtube Blocker', options, 
     function() { console.log("Last error:", chrome.runtime.lastError);})
   }
 
@@ -153,7 +152,7 @@ chrome.runtime.onMessage.addListener(
 
   function initiateHarderToDeactivateActions() {
     chrome.storage.local.get('harderDeactivate', function(data) {
-      if(data.harderDeactivate == true) {
+      if (data.harderDeactivate == true) {
         $('#harderDeactivate').prop('checked', true);
         harderDeactivate = true;
       }
@@ -183,7 +182,7 @@ chrome.runtime.onMessage.addListener(
 
   function initiateActivatedValueActions() {
     chrome.storage.local.get('activated', function(data) {
-        if(data.activated === undefined) {
+        if (data.activated === undefined) {
           activated = false
           setActivated(false)
           deactivateJQuery();
