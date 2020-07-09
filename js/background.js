@@ -30,7 +30,7 @@ $(document).ready(function() {
       } 
       else {
         clearWarningTextjQuery();
-        console.log('---------------- API Key:' + data.apiKey + "----------------")
+        console.log('---------------- API Key:' + data.apiKey + " ----------------")
         USER_API_KEY = data.apiKey
       }
     }
@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener(
         let message = "You were watching a non educational youtube video so you were redirected to the homepage.\nOnly Education, Science & Technology, or Howto & Style videos are allowed."
         showNotification(message);
     } 
-    else if(request.url){
+    else if (request.url){
       console.log('request url: ' + request.url);
     
       initiateisAllowed(request.url).then(json => {
@@ -73,11 +73,13 @@ chrome.runtime.onMessage.addListener(
 });
 
   function handleYoutubeAPIError(json) {
-    console.log("API error trigger")
     let message = json.error.message;
-    console.log(message)
+    console.log("-- API error trigger: " + message)
+
     let showingMessage = "Your Youtube key is invalid. Please make sure it is correct in the options page"
-    if(message.indexOf('Bad Request') == -1) {
+  
+    let isBadRequest = message.indexOf("not valid");
+    if (!isBadRequest) {
       console.log('Not bad request error')
       showingMessage = "The Youtube key call limit was reached so it will not block videos anymore. It will reset at midnight PT/3 am EST. You can create a new key in the options page."
     }
@@ -129,8 +131,9 @@ chrome.runtime.onMessage.addListener(
   $('#options').on('click', function() {
     if (chrome.runtime.openOptionsPage) {
       chrome.runtime.openOptionsPage();
-    } else {
-      window.open(chrome.runtime.getURL('options.html'));
+    } 
+    else {
+      // window.open(chrome.runtime.getURL('options.html'));
     }
   });
 
