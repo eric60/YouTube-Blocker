@@ -68,7 +68,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log("Initiating Youtube Study for new url: " + currentUrl);
 
     chrome.runtime.sendMessage({url: currentUrl}, function(response) {
-        console.log("-------Response from send url message: " + response.json + " ------------");
+        console.log("-------Response from send url message: -----------");
         processYoutubeData(response.json, blockYoutubeUrl)
     });
  }

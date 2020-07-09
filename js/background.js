@@ -59,7 +59,7 @@ chrome.runtime.onMessage.addListener(
       console.log('request url: ' + request.url);
     
       initiateisAllowed(request.url).then(json => {
-        if (json.error != undefined) {
+        if (json.error) {
           handleYoutubeAPIError(json)
         } 
         else {
@@ -74,13 +74,12 @@ chrome.runtime.onMessage.addListener(
 
   function handleYoutubeAPIError(json) {
     let message = json.error.message;
-    console.log("-- API error trigger: " + message)
+    console.log("------ API error trigger: " + message)
 
     let showingMessage = "Your Youtube key is invalid. Please make sure it is correct in the options page"
   
     let isBadRequest = message.indexOf("not valid");
     if (!isBadRequest) {
-      console.log('Not bad request error')
       showingMessage = "The Youtube key call limit was reached so it will not block videos anymore. It will reset at midnight PT/3 am EST. You can set a new key in the options page."
     }
     showNotification(showingMessage)
@@ -96,6 +95,8 @@ chrome.runtime.onMessage.addListener(
     }
 
     const restAPI = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${USER_API_KEY}&fields=items(snippet(categoryId))`
+    console.log("--- restAPI call: ")
+    console.log(restAPI);
 
     countApiCalls++;
     console.log("API calls so far: " + countApiCalls)
@@ -123,16 +124,12 @@ chrome.runtime.onMessage.addListener(
         title: "Youtube Blocker", 
         message: message,
     }
-    chrome.notifications.create('Youtube Blocker', options, 
-    function() { console.log("Last error:", chrome.runtime.lastError);})
+    chrome.notifications.create('Youtube Blocker', options)
   }
 
   $('#options').on('click', function() {
     if (chrome.runtime.openOptionsPage) {
       chrome.runtime.openOptionsPage();
-    } 
-    else {
-      // window.open(chrome.runtime.getURL('options.html'));
     }
   });
 

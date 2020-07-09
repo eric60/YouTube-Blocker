@@ -45,7 +45,7 @@ $(document).ready(function(){
         chrome.storage.local.set({apiKey : key}, function(){
             console.log('set api key: ' + key)
             location.reload()
-            // chrome.runtime.reload()
+            chrome.runtime.reload()
         })
     }
 
