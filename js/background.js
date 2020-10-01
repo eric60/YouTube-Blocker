@@ -1,6 +1,6 @@
 let activated;
 let harderDeactivate;
-const DEFAULT_API_KEY = "AIzaSyB_XpX6MAKkIFQqC0Ktt0LmtVESWjA0EfQ";
+const DEFAULT_API_KEY = "No Key Set";
 let USER_API_KEY = ""
 let apiKeysQueue = []
 let countApiCalls = 0;

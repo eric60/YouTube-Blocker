@@ -16,13 +16,6 @@ $(document).ready(function(){
             console.log('activated value: ' + activated)
         })
     }
-
-    function save_options() {
-        if (confirm("Are you sure you want to save this key?")) {
-            setApiKey()
-            alert('You have saved your options')
-        }
-    }
     
     function getApiKey() {
         chrome.storage.local.get('apiKey', function(data) {
@@ -30,13 +23,32 @@ $(document).ready(function(){
             console.log('Key value is: ' + data.apiKey)
             let key = data.apiKey;
             if (key == "") {
-                value = "Your current Youtube key is the default key which will run out"
+                value = "You do not have a key set."
             } 
             else {
                 value = "Your current Youtube key is: <b id='key'>" + key + "</b>"
             }
             $('#currKey').html(value)
         })  
+    }
+
+    function save_options() {
+        if (!isValidKey()) {
+            return;
+        }
+        if (confirm("Are you sure you want to save this key?")) {
+            setApiKey()
+            alert('You have saved your options')
+        }
+    }
+
+    function isValidKey() {
+        let key = $('#API_KEY').val()
+        if (!key) {
+            alert("Please enter a key")
+            return false;
+        }
+        return true;
     }
     
     function setApiKey() {

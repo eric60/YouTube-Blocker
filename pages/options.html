@@ -9,14 +9,13 @@
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
 </head>
     <body class="container">
-        <h1>Set your Personal Youtube Key and Never Run Out</h1>
-        <p>You can create a Youtube key for your own personal use so the extension knows what videos to block or you can use the shared
-            key. The shared key will reach its limit if more than 5 people are using it, so please create a key and you won't run out of 
-            calls.
+        <h2>Set your Personal Youtube Key</h2>
+        <p>You can create a free Youtube key for your own personal use so the extension knows what videos to block.<br> Google may ask for a payment method
+            but you can remove it after you create your key.
         </p>
-        <h2>Instructions to Setup a Free Key (10 minutes)</h2>
+        <h3>Setup (6 minutes)</h3>
         <ol>
-            <li>Go to <a href="https://cloud.google.com/">Google's Cloud Platform (GCP)</a> and create a free account</li>
+            <li>Go to <a href="https://cloud.google.com/">Google's Cloud Platform (GCP)</a> and create a free account using your google account</li>
             <li>Create a new project</li>
             <li>Click the left top navigation menu and go to <b>APIs and Services and create a new Youtube Data API</b> </li>
             <ol><li>You can create up to 10 keys for free if you run out, but this is unlikely.</li></ol>
@@ -25,15 +24,15 @@
             <li>Set your API key then press the Activate button on the extension.
             Refresh the video if it doesn't work right away. Double check your key is correct if doesn't work after 5 refreshes.
             </li>
+            <li>You can remove your billing account since YouTube Data doesn't cost any money</li>
         </ol>
         
         <label>
             <b>Input your key below</b>
             <br>
-            <input type="text" id="API_KEY">
+            <input type="text" id="API_KEY" required>
         </label>
         <button class="btn btn-primary" id="saveKey">Save</button>
-        <p>Or leave blank and save to use default key. <b>WARNING: Key will reach its limit and not work if there are more than 5 users so please set your own key.</b></p>
         
         <p id="currKey"><u>Your current Youtube Key is: </u></p>
         <h2>Options</h2>  
