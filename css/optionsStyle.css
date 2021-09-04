@@ -2,6 +2,10 @@ body {
     max-width: 50%;
 }
 
+.container {
+    margin-top: 1%;
+}
+
 b {
     color:red;
 }
