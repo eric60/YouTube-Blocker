@@ -1,6 +1,4 @@
-
-let firstRun = false;
-let prevUrls = [];
+let previousSourceVideoData = [];
 let activated;
 const allowedVideoCategories = ["Howto & Style", "Education", "Science & Technology"]
 
@@ -48,29 +46,28 @@ function checkUrl(){
     for(index in scripts) {
         if(typeof scripts[index].innerHTML !== "undefined" && scripts[index].innerHTML.indexOf('"category":') !== -1) {
             pos = scripts[index].innerHTML.indexOf('"category":');
-            tmp = scripts[index].innerHTML.substring(pos+12,pos+100);
-            console.log("tmp: " + tmp)
-            pos = tmp.indexOf('"');
-            tmp = tmp.substring(0,pos);
-            console.log('Youtube Video category is: ' + tmp)
-            handleYoutubeBlocking(tmp)
+            videoMetadata = scripts[index].innerHTML.substring(pos+12,pos+100);
+            console.log("videoMetadata: " + videoMetadata)
+            pos = videoMetadata.indexOf('"');
+            videoCategory = videoMetadata.substring(0,pos);
+            console.log('Youtube Video category is: ' + videoCategory)
+            handleYoutubeBlocking(videoCategory)
             break;
         }
 
         if(typeof scripts[index].innerHTML !== "undefined" && scripts[index].innerHTML.indexOf('"genre":') !== -1) {
             pos = scripts[index].innerHTML.indexOf('"genre":');
-            tmp = scripts[index].innerHTML.substring(pos+9,pos+100);
-            console.log("tmp: " + tmp)
-            pos = tmp.indexOf('"');
-            tmp = tmp.substring(0,pos);
-            handleYoutubeBlocking(tmp)
+            videoMetadata = scripts[index].innerHTML.substring(pos+9,pos+100);
+            console.log("videoMetadata: " + videoMetadata)
+            pos = videoMetadata.indexOf('"');
+            videoCategory = videoMetadata.substring(0,pos);
+            handleYoutubeBlocking(videoCategory)
             break;
         }
     }
 }
 
 function handleYoutubeBlocking(videoCategoryString) {
-    console.log("inside isCateogryAllowed")
     isVideoCategoryAllowed = allowedVideoCategories.includes(videoCategoryString)
     console.log("isVideoCategoryAllowed: " + isVideoCategoryAllowed)
     if (isVideoCategoryAllowed == false) {
@@ -80,7 +77,7 @@ function handleYoutubeBlocking(videoCategoryString) {
 }
 
 function blockYoutubeVideo(videoCategoryString) {
-    console.log('in blockYoutubeUrl')
+    console.log('in blockYoutubeVideo')
     chrome.storage.local.get(['activated'], function(data) {
         console.log('Blocking Activated value: ' + data.activated)
     
