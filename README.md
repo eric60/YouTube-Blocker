@@ -3,8 +3,15 @@
 
 # Docs [here](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ/view?usp=sharing)
 
-## Application Purpose
+# Application Purpose
 YouTube Blocker blocks YouTube videos not in the Education, Science & Technology, or Howto & Style categories so you can focus on educational videos.
+
+# Setup Instructions
+1. clone repo
+2. go to chrome://extensions
+3. Press `Load unpacked` in top left corner 
+4. Select youtube-blocker folder
+5. Enable extension and develop in your IDE. Changes should reflect automatically. If not, then press the refresh button on the extension card in the chrome://extensions page
 
 ## Resources Used
 * Chrome Extension API
