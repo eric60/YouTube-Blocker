@@ -1,5 +1,3 @@
-// import { blockHtml } from './Service/htmlBlockerService'
-
 let activated;
 let harderDeactivate;
 const DEFAULT_API_KEY = "No Key Set";
@@ -9,9 +7,8 @@ let countApiCalls = 0;
 let harderDeactivateClicksVal;
 
 $(document).ready(function() {
-  chrome.storage.local.get('apiKey', function(data) {
-      $('#harderDeactivateDiv').show()    
-})
+
+  $('#harderDeactivateDiv').show()    
 
 
 // notifiy content script when youtube dynamically updates DOM to prevent re fetching API
@@ -96,7 +93,7 @@ chrome.runtime.onMessage.addListener(
   function showNotification(message) {
     let options = {
         type: 'basic', 
-        iconUrl: '../resources/icon.png', 
+        iconUrl: '../resources/icon.png',
         title: "Youtube Blocker", 
         message: message,
     }
