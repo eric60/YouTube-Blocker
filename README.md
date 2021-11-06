@@ -1,4 +1,4 @@
-# YouTube Blocker Chrome Extension
+# [YouTube Blocker Chrome Extension](https://chrome.google.com/webstore/detail/youtube-study/oohcfepaadomnocmmkejhnfhcddpdpab?authuser=0&hl=en)
 <img src="https://github.com/erics98/ChromeExtension/blob/master/resources/icon.png" width="130" height="100">
 
 # About
@@ -17,8 +17,5 @@ YouTube Blocker blocks YouTube videos not in the Education, Science & Technology
 5. Enable extension and develop in your IDE. Changes should reflect automatically. If not, then press the refresh button on the extension card in the chrome://extensions page
 
 
-
-# Chrome Store [Download](https://chrome.google.com/webstore/detail/youtube-study/oohcfepaadomnocmmkejhnfhcddpdpab?authuser=0&hl=en)
-<img src="https://github.com/eric60/YouTube-Study/blob/master/resources/Youtube-Study-Chrome-Store.jpg">
-
-**Logo was made in Adobe Photoshop.**
+# Notes
+- Logo was made in Adobe Photoshop
