@@ -5,7 +5,7 @@
 YouTube Blocker blocks YouTube videos not in the Education, Science & Technology, or Howto & Style categories so you can focus on educational videos.
 
 # How
-![image](https://user-images.githubusercontent.com/30248575/161360624-7e51241b-78c5-4538-9cab-d3b9f4dbeb4b.png)
+![image](https://user-images.githubusercontent.com/30248575/161360734-bc649ddf-7fa7-4dde-ace3-36dc7c446a58.png)
 
 Diagram [here](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ/view?usp=sharing)
 
