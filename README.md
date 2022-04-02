@@ -1,12 +1,13 @@
 # [YouTube Blocker Chrome Extension](https://chrome.google.com/webstore/detail/youtube-study/oohcfepaadomnocmmkejhnfhcddpdpab?authuser=0&hl=en)
 <img src="https://github.com/erics98/ChromeExtension/blob/master/resources/icon.png" width="130" height="100">
 
-# About
+# What
 YouTube Blocker blocks YouTube videos not in the Education, Science & Technology, or Howto & Style categories so you can focus on educational videos.
 
-# [Docs](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ/view?usp=sharing)
+# How
 ![image](https://user-images.githubusercontent.com/30248575/161360624-7e51241b-78c5-4538-9cab-d3b9f4dbeb4b.png)
 
+Diagram [here](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ/view?usp=sharing)
 
 ### Notes
 - Each page has a different local storage
