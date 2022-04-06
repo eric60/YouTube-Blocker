@@ -16,8 +16,9 @@ Diagram [here](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ
 - Content Script has the context of the web page. It has restrictions on CORS
 so only the Background Script can run the CORS API requests.
 - Content Script sends a Chrome message to the Background Script on whether to block the YouTube video or not
+- Logo was made in Adobe Photoshop
 
-**Resources Used**
+### Resources Used
 * Chrome Extension API
 * Youtube Data API
 
@@ -29,5 +30,3 @@ so only the Background Script can run the CORS API requests.
 5. Enable extension and develop in your IDE. Changes should reflect automatically. If not, then press the refresh button on the extension card in the chrome://extensions page
 
 
-# Notes
-- Logo was made in Adobe Photoshop
