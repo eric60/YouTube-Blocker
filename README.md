@@ -30,3 +30,5 @@ so only the Background Script can run the CORS API requests.
 5. Enable extension and develop in your IDE. Changes should reflect automatically. If not, then press the refresh button on the extension card in the chrome://extensions page
 
 
+# Screenshots
+![image](https://github.com/eric60/YouTube-Blocker/assets/30248575/a9fe43a2-99c8-430f-b1e8-65bfe230a1de)
