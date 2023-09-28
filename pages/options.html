@@ -8,55 +8,19 @@
     <link rel="stylesheet" type="text/css" href="../css/optionsStyle.css">
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
 </head>
-    <body class="container">
+    <body class="container">    
         <h2>Youtube Blocker Setup</h2>
-        <p>You must create your personal free Youtube Data Key so the extension knows what videos to block using that key.
-            <br> You do not have to set any payment method.
-        </p>
-        <h3>Setup (6-10 minutes)</h3>
-        <ol>
-            <li>Go to <a href="https://cloud.google.com/">Google's Cloud Platform (GCP)</a> and create a free account using your google account</li>
-            <li>Create a new project and name it something like "Personal Youtube Data Project"</li>
-            <li>Click the left top navigation menu and go to <b>'APIs and Services'</b> </li>
-            <li>You should be on your dashboard now. Click 'Enable APIs and Services', search for Youtube Data API v3, click it, and enable it. 
-                You should see a checkmark with 'API Enabled'
-                <ul>
-                    <li>If you don't see that, then click 'Manage' and enable it on the Youtube Data Dashboard</li>
-                    <li>Please submit an issue on the chrome extension store's 'Support' tab if you have trouble and I will assist you.</li>
-                </ul>
-            </li>
-            <li>Go back to 'APIs and Services'</li>
-            <li>Click credentials in the left hand menu and click 'Create Credentials' on the page then click API key in the drop down</li>
-            <li>You will see your API Key below with a number and a warning symbol. Click the Api Key you created e.g. API Key 1</li>
-            <li><b>Very Important:</b> Click 'Restrict Key' and select 'Youtube Data API v3'. 
-                <br>This is to limit your key usage to the Youtube Data quota of 10k/day and prevent others from using your key 
-                <ul>
-                    <li>Your 'API Key 1' should now have a checkmark to its left on the 'Credentials' page</li>
-                </ul>
-            </li>
-            <li>Copy and paste your new personal API key in the input below to register it to the extension. It will be a long text key like this: <b>AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG</b></li>
-            <li>Set your API key then press the Activate button on the extension.
-            Refresh the video if it doesn't work right away. Double check your key is correct if doesn't work after 5 refreshes.
-            </li>
-            <li>Note: You do NOT have to set any payment method. If you did, then you can remove it since YouTube Data doesn't cost any money</li>
-        </ol>
-        
-        <label>
-            <b>Input your key below</b>
-            <br>
-            <input type="text" id="API_KEY" required>
-        </label>
-        <button class="btn btn-primary" id="saveKey">Save</button>
-        
-        <p id="currKey"><u>Your current Youtube Key is: </u></p>
+        <p>From v3.4 to the new v4.0, you no longer need to setup a Youtube Data API Key to block thanks to Oscar Semec's code changes.</p>
         <h2>Options</h2>  
         <form id="myForm">
             <h4>Click __ times to deactivate YouTube blocking</h4>
             <input type="radio" id="harder10" name="clicksRadio" value="10"> 10<br>
             <input type="radio" id="harder20" name="clicksRadio" value="20"> 20<br>
             <input type="radio" id="harder30" name="clicksRadio" value="30"> 30<br>
+            <input type="radio" id="harder40" name="clicksRadio" value="40"> 40<br>
+            <input type="radio" id="harder50" name="clicksRadio" value="50"> 50<br>
             <input type="radio" id="harder100" name="clicksRadio" value="100"> 100<br>
             <button class="btn btn-primary" id="saveHarderClicks">Save</button>
         </form>     
-    </body>
+    </body> 
 </html>
