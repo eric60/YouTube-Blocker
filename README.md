@@ -17,6 +17,9 @@ Diagram [here](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ
 so only the Background Script can run the CORS API requests.
 - Content Script sends a Chrome message to the Background Script on whether to block the YouTube video or not
 - Logo was made in Adobe Photoshop
+- Background page replaced with Service Worker
+  - background pages provide an environment that lives independent of any other window or tab. This allows extensions to observe and act in response to events.
+  - 
 
 ### Resources Used
 * Chrome Extension API
