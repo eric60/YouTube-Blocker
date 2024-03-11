@@ -21,7 +21,10 @@
     "default_title": "YouTube Blocker",
     "default_popup": "pages/popup.html"
   },
-  "content_security_policy": "script-src 'self' https://ajax.googleapis.com https://www.googleapis.com; object-src 'self'",
+  "content_security_policy": {
+    "script-src":  "self https://ajax.googleapis.com https://www.googleapis.com",
+    "object-src": "self"
+  },
   "options_page": "pages/options.html",
   "permissions": [
     "notifications",
