@@ -1,7 +1,7 @@
 {
 "name": "YouTube Blocker",
-"version": "3.4",
-"manifest_version": 2,
+"version": "3.5",
+"manifest_version": 3,
 "description": "Block non educational YouTube videos",
 "icons": {
   "128": "resources/icon.png"
