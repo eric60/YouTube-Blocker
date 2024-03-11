@@ -1,34 +1,36 @@
 {
-"name": "YouTube Blocker",
-"version": "3.5",
-"manifest_version": 3,
-"description": "Block non educational YouTube videos",
-"icons": {
-  "128": "resources/icon.png"
-},
-"background": {
-  "scripts": ["js/jquery-3.4.1.min.js","js/background.js"],
-  "persistent": true
-},
-"content_scripts": [
-  {
-    "matches": ["*://*.youtube.com/*"],
-    "run_at": "document_idle",
-    "js": ["js/jquery-3.4.1.min.js", "js/contentScript.js"]
-  }
-],
-"browser_action": {
-  "default_title": "YouTube Blocker",
-  "default_popup": "pages/popup.html"
-},
-"content_security_policy": "script-src 'self' https://ajax.googleapis.com https://www.googleapis.com; object-src 'self'",
-"options_page": "pages/options.html",
-"permissions": [
-  "notifications",
-  "storage",
-  "background",
-  "*://*.youtube.com/*",
-  "tabs",
-  "webNavigation"
- ]
+  "name": "YouTube Blocker",
+  "version": "3.5",
+  "manifest_version": 3,
+  "description": "Block non educational YouTube videos",
+  "icons": {
+    "128": "resources/icon.png"
+  },
+  "background": {
+    "scripts": ["js/jquery-3.4.1.min.js","js/background.js"],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "run_at": "document_idle",
+      "js": ["js/jquery-3.4.1.min.js", "js/contentScript.js"]
+    }
+  ],
+  "browser_action": {
+    "default_title": "YouTube Blocker",
+    "default_popup": "pages/popup.html"
+  },
+  "content_security_policy": "script-src 'self' https://ajax.googleapis.com https://www.googleapis.com; object-src 'self'",
+  "options_page": "pages/options.html",
+  "permissions": [
+    "notifications",
+    "storage",
+    "background",
+    "tabs",
+    "webNavigation"
+   ],
+  "host_permissions": [
+    "*://*.youtube.com/*"
+  ]
 }
