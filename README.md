@@ -23,11 +23,14 @@ so only the Background Script can run the CORS API requests.
 * Youtube Data API
 
 # Setup 
-1. clone repo
+1. fork repo if desired
+2. clone repo locally 
 2. go to chrome://extensions
 3. Press `Load unpacked` in top left corner 
-4. Select youtube-blocker folder
-5. Enable extension and develop in your IDE. Changes should reflect automatically. If not, then press the refresh button on the extension card in the chrome://extensions page
+4. Select your cloned youtube-blocker folder
+5. Enable the extension and develop in your IDE. 
+6. Changes should reflect automatically after you save
+7. If not, then press the refresh button on the extension card in the chrome://extensions page
 
 
 # Screenshots
