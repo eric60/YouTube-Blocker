@@ -8,34 +8,7 @@ let harderDeactivateClicksVal;
 
 $(document).ready(function() {
 
-  function initialSetupjQuery() {
-    $('#startButton').hide();
-    $('#text').hide();
-    clearWarningTextjQuery();
-    $("#options").text("Set your YouTube key to start blocking");
-    $('#harderDeactivateText').hide()
-    $('#harderDeactivate').hide()
-  }
-
-  chrome.storage.local.get('apiKey', function(data) {
-    if (data.apiKey === undefined) {
-        initialSetupjQuery();
-    } 
-    else {
-      $('#harderDeactivateDiv').show()
-      if (data.apiKey == "") {
-        console.log('trigger empty key')
-        USER_API_KEY = DEFAULT_API_KEY;
-        warningTextjQuery()
-      } 
-      else {
-        clearWarningTextjQuery();
-        console.log('---------------- API Key:' + data.apiKey + " ----------------")
-        USER_API_KEY = data.apiKey
-      }
-    }
-    
-})
+  $('#harderDeactivateDiv').show()    
 
 
 // notifiy content script when youtube dynamically updates DOM to prevent re fetching API
@@ -120,7 +93,7 @@ chrome.runtime.onMessage.addListener(
   function showNotification(message) {
     let options = {
         type: 'basic', 
-        iconUrl: '../resources/icon.png', 
+        iconUrl: '../resources/icon.png',
         title: "Youtube Blocker", 
         message: message,
     }
@@ -345,16 +318,6 @@ chrome.runtime.onMessage.addListener(
   function showMakeItHarderjQuery() {
     $('#harderDeactivateText').show()
     $('#harderDeactivate').show()
-  }
-
-  function warningTextjQuery() {
-    $("#warning").show();
-    $('body').css({'height':'390px'});
-  }
-
-  function clearWarningTextjQuery() {
-    $("#warning").hide();
-    $('body').css({'height':'360px'});
   }
 
 });

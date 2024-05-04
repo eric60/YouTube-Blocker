@@ -1,41 +1,6 @@
-
-let firstRun = false;
-let prevUrls = [];
+let previousvideoMetaData = [];
 let activated;
-const youtubeCategoryMappings = {
-    "1": "Film & Animation",
-    "2": "Autos & Vehicles",
-    "10": "Music",
-    "15": "Pets & Animals",
-    "17": "Sports",
-    "18": "Short Movies",
-    "19": "Travel & Events",
-    "20": "Gaming",
-    "21": "Videoblogging",
-    "22": "People & Blogs",
-    "23": "Comedy",
-    "24": "Entertainment",
-    "25": "News & Politics",
-    "26": "Howto & Style",
-    "27": "Education",
-    "28": "Science & Technology",
-    "29": "Nonprofits & Activism",
-    "30": "Movies",
-    "31": "Anime/Animation",
-    "32": "Action/Adventure",
-    "33": "Classics",
-    "34": "Comedy",
-    "35": "Documentary",
-    "36": "Drama",
-    "37": "Family",
-    "38": "Foreign",
-    "39": "Horror",
-    "40": "Sci-Fi/Fantasy",
-    "41": "Thriller",
-    "42": "Shorts",
-    "43": "Shows",
-    "44": "Trailers"
-  }
+const allowedVideoCategories = ["Howto & Style", "Education", "Science & Technology"]
 
 chrome.storage.local.get(['activated'], function(data) {
     activated = data.activated;  
@@ -43,7 +8,7 @@ chrome.storage.local.get(['activated'], function(data) {
 
     if (activated == true) {
         console.log('Blocking is activated. Initiating blocking')
-        initiate();
+        initiateBlockingBasedOnInnerHtml();
     } 
     else {
         console.log('Blocking not activated. Not initiating')
@@ -54,55 +19,101 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.query === 'Page updated')
     {
         console.log('Page updated');
-        initiate();
+        initiateBlockingBasedOnInnerHtml();
     }
  });
- 
- function initiate() {
-    let currentUrl = location.href;
-    if (prevUrls.includes(currentUrl)) {
-        console.log('--------- Url already fetched.Not fetching again. ---------')
-        return;
-    }
-    prevUrls.push(currentUrl);
-    console.log("Initiating Youtube Study for new url: " + currentUrl);
 
-    chrome.runtime.sendMessage({url: currentUrl}, function(response) {
-        console.log("-------Response from send url message: -----------");
-        processYoutubeData(response.json, blockYoutubeUrl)
-    });
+
+ function initiateBlockingBasedOnInnerHtml() {
+    console.log("initiating BlockingBasedOnInnerHtml")
+    var curUrl = window.location.href;
+    window.setInterval(function(){
+        console.log("Checking url")
+        if(curUrl != window.location.href) {
+            curUrl = window.location.href;
+
+            setTimeout(function(){
+                checkUrl();
+            }, 1000);
+        }
+    }, 60000);
+    checkUrl();
  }
 
-  function processYoutubeData(json, callbackBlockYoutubeUrl) {
-    const allowedIds = ['26', '27', '28']; // video category ids for Howto & Style, Education, Science & technology
-    let videoCategory = json.items[0].snippet.categoryId;
-    let videoCategoryString = youtubeCategoryMappings[videoCategory];
-    console.log("YouTube Video Category: " + videoCategoryString);
-
-    let isAllowedResult = allowedIds.includes(videoCategory);
-
-    console.log('isAllowedUrl: ' + isAllowedResult);
-    if(isAllowedResult == false) {
-        callbackBlockYoutubeUrl(videoCategoryString);
+function checkUrl(){
+    console.log("--- inside checkUrl ---")
+    let scripts = document.scripts;
+    console.log(scripts)
+    for(index in scripts) {
+        if(typeof scripts[index].innerHTML !== "undefined" && scripts[index].innerHTML.indexOf('"category":') !== -1) {
+            if (handleVideoMetaData(scripts, '"category":', 12, 100)) {
+                break;
+            }
+        }
+        if(typeof scripts[index].innerHTML !== "undefined" && scripts[index].innerHTML.indexOf('"genre":') !== -1) {
+            if (handleVideoMetaData(scripts, '"genre":', 9, 100)) {
+                break;
+            }
+        }
     }
-  }
+    // handleNoWayToCheckVideoCategoryError()
+}
 
+function handleNoWayToCheckVideoCategoryError() {
+    alert("Error: Youtube Blocker could not detect the video category of this video.")
+}
 
-function blockYoutubeUrl(videoCategoryString) {
-    console.log('in blockYoutubeUrl')
+function handleVideoMetaData(scripts, videoMetadataHtmlStartStr, startOffset, endOffset) {
+    pos = scripts[index].innerHTML.indexOf(videoMetadataHtmlStartStr);
+    videoMetadata = scripts[index].innerHTML.substring(pos + startOffset, pos + endOffset);
+    if (isVideoMetadataDuplicate(videoMetadata)) {
+        return false;
+    }
+    console.log(`videoMetadata for ${videoMetadataHtmlStartStr}: ` + videoMetadata)
+    pos = videoMetadata.indexOf('"');
+    videoCategory = videoMetadata.substring(0,pos);
+    videoCategory = videoCategory.replace("\\u0026", "&")
+    console.log('Youtube Video category is: ' + videoCategory)
+    handleYoutubeBlocking(videoCategory)
+    return true;
+}
+
+function isVideoMetadataDuplicate(videoMetadata) {
+    console.log("previousvideoMetaData: " + previousvideoMetaData)
+    if (previousvideoMetaData.includes(videoMetadata)) {
+        console.log("video meta data is duplicate")
+        return true;
+    }
+    console.log("video meta data is NOT duplicate")
+    previousvideoMetaData.push(videoMetadata);
+    return false;
+}
+
+function handleYoutubeBlocking(videoCategoryString) {
+    isVideoCategoryAllowed = allowedVideoCategories.includes(videoCategoryString)
+    console.log("isVideoCategoryAllowed: " + isVideoCategoryAllowed)
+    if (isVideoCategoryAllowed == false) {
+        blockYoutubeVideo(videoCategoryString)
+    }
+    return true;
+}
+
+function blockYoutubeVideo(videoCategoryString) {
+    console.log('in blockYoutubeVideo')
     chrome.storage.local.get(['activated'], function(data) {
         console.log('Blocking Activated value: ' + data.activated)
     
         if (data.activated === true) {  
             console.log('---- Sent create notification to background ----');
-            // Block redirecting happens here
-            location.replace('http://youtube.com')
+            //location.replace('http://youtube.com')
             chrome.runtime.sendMessage({createNotification: true, videoCategoryString: videoCategoryString}, 
                 function(response) {
-            });           
+            });     
         }
     });
 }
+
+
 
 
 
