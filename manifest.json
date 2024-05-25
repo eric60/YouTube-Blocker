@@ -7,7 +7,8 @@
     "128": "resources/icon.png"
   },
   "background": {
-    "service_worker": "js/service_worker.js"
+    "service_worker": "js/service_worker.js",
+    "type": "module"
   },
   "content_scripts": [
     {

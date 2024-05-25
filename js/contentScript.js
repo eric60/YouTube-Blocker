@@ -1,7 +1,5 @@
-
-let firstRun = false;
 let prevUrls = [];
-let activated;
+let activated = false;
 const youtubeCategoryMappings = {
     "1": "Film & Animation",
     "2": "Autos & Vehicles",
