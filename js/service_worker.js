@@ -7,26 +7,28 @@ let countApiCalls = 0;
 let harderDeactivateClicksVal;
 
 // ======================== Service Workers Documentation =========================================
-/**
+/*
  * Service workers are by definition event-driven and will terminate on inactivity. This way Chrome can optimize performance and memory consumption of your extension
  * Service workers will be reinitialized when the event is dispatched
  * Your extension scripts should use message passing to communicate between a service worker and other parts of your extension. Currently that entails using sendMessage() and implementing chrome.runtime.onMessage in your extension service worker. Long term, you should plan to replace these calls with postMessage() and a service worker's message event handler.
  */
 
-// ============================== All Event Listeners =========================================
-/**
+
+$(document).ready(function() {
+
+  // ============================== All Event Listeners =========================================
+/*
  * ALL listeners MUST be registered in the top level of the script because service_workers are not constantly running.
  * https://developer.chrome.com/docs/extensions/develop/migrate/to-service-workers
  * This works with a persistent background page because the page is constantly running and never reinitialized. In Manifest V3, the service worker will be reinitialized when the event is dispatched. This means that when the event fires, the listeners will not be immediately registered already at that exact moment in time (since they are added asynchronously), and the event will be missed.
  * Instead, move the event listener registration to the top level of your script. This ensures that Chrome will be able to immediately find and invoke your action's click handler, even if your extension hasn't finished executing its startup logic.
  */
 
-
-/**
+/*
  * we addEventListener for messages from content script to call YouTube Data API to determine if the video is allowed or now
  * Note: fetch request doesn't work in content script in context of web page due to CORs restrictions so we have to do this login in the service_worker
 */
-chrome.runtime.onMessage.addEventListener("change",
+chrome.runtime.onMessage.addListener("load",
   function(request, sender, sendResponse) {
     let messageForBlockingUrlRequest = request.url;
 
@@ -52,15 +54,13 @@ chrome.runtime.onMessage.addEventListener("change",
 });
 
 // notify content script when youtube dynamically updates DOM to prevent re fetching API
-chrome.webNavigation.onHistoryStateUpdated.addEventListener("change", function(details) {
+chrome.webNavigation.onHistoryStateUpdated.addListener("load", function(details) {
   console.log('page updated')
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {query: "Page updated"}, function(response) {
     });
   });
 })
-
-$(document).ready(function() {
 
   function initialSetupjQuery() {
     $('#startButton').hide();
@@ -89,7 +89,7 @@ $(document).ready(function() {
       }
     }
 
-})
+  })
 
   function handleYoutubeAPIError(json) {
     let message = json.error.message;
