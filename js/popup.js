@@ -1,7 +1,8 @@
-import {activateOptionsPage, activated, harderDeactivate} from "./service_worker.js";
+import {activateOptionsPage, activated, harderDeactivate, setHarderDeactivateValue} from "./service_worker.js";
+
 
 // =================== Popup States ===================
-export function inInitialSetupState() {
+  export function inInitialSetupState() {
     $('#startButton').hide();
     $('#text').hide();
     clearWarningTextjQuery();
@@ -12,30 +13,29 @@ export function inInitialSetupState() {
 
   export function inAlreadySetupState() {
     $('#harderDeactivateDiv').show()
+
+     $('#options').on('click', function () {
+      activateOptionsPage()
+    });
+
+    $('#harderDeactivate').mousedown(function () {
+      if ($(this).is(':checked')) {
+        setHarderDeactivateValue(false)
+      } else {
+        setHarderDeactivateValue(true)
+      }
+    })
   }
-
-  $('#options').on('click', function() {
-    activateOptionsPage()
-  });
-
-  $('#harderDeactivate').mousedown(function() {
-    if ($(this).is(':checked')) {
-      setHarderDeactivateValue(false)
-    }
-    else {
-      setHarderDeactivateValue(true)
-    }
-  });
 
   // =================== Handle Start button based on harderDeactivate and Activated values ===================
   let clicks = 0;
+
   export function handleStartButton() {
     console.log('trigger handleStartButton. harderDeactivate is: ' + harderDeactivate + "\nactivated is: " + activated)
 
     if (harderDeactivate == false) {
       $('#startButton').on("click", buttonWhenHarderDeactivateFalse)
-    }
-    else {
+    } else {
       $('#startButton').on("click", buttonWhenHarderDeactivateTrue)
     }
   }
@@ -44,8 +44,7 @@ export function inInitialSetupState() {
     console.log('Inside handleStartButton harderDeactivate false\nactivated is: ' + activated)
     if (activated == false) {
       activateAction();
-    }
-    else {
+    } else {
       console.log('trigger harderDeactivefalse and activate true')
       deactivateAction();
     }
@@ -55,25 +54,24 @@ export function inInitialSetupState() {
     console.log('Inside handleStartButton harderDeactivate true')
     if (!activated) {
       activateWhenDeactivateHarderAction();
-    }
-    else {
-        clicks++;
-        console.log(clicks)
-        if (clicks % harderDeactivateClicksVal == 0) {
-          deactivateAction();
-        }
+    } else {
+      clicks++;
+      console.log(clicks)
+      if (clicks % harderDeactivateClicksVal == 0) {
+        deactivateAction();
+      }
     }
   }
 
 
   // ================================ jQuery and Action methods ===================================
-    export function clearErrorMessage() {
-      $('.errorMessage').text("")
-    }
+  export function clearErrorMessage() {
+    $('.errorMessage').text("")
+  }
 
-    export function checkHarderToDeactivateCheckBox() {
-      $('#harderDeactivate').prop('checked', true);
-    }
+  export function checkHarderToDeactivateCheckBox() {
+    $('#harderDeactivate').prop('checked', true);
+  }
 
   export function resetStartButton() {
     console.log('Trigger resetStartButton')
@@ -91,34 +89,34 @@ export function inInitialSetupState() {
 
   export function refreshPage() {
     // refresh tab
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
       console.log(tabs[0].url);
       let url = tabs[0].url;
-      if(url.search("youtube.com") != -1) {
+      if (url.search("youtube.com") != -1) {
         chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
       }
     });
   }
 
   export function inActivatedStateJQuery() {
-    $('#startButton').css('background-color','#f44336')
+    $('#startButton').css('background-color', '#f44336')
     $('#startButton').text("Deactivate")
     hideMakeItHarderjQuery();
   }
 
   export function deactivateAction() {
-    if(confirm('Are you sure you really need to deactivate?')) {
-       inDeactivatedStateJQuery();
-       resetMadeItHarderjQuery();
-       activated = !activated
-       setActivated(activated)
+    if (confirm('Are you sure you really need to deactivate?')) {
+      inDeactivatedStateJQuery();
+      resetMadeItHarderjQuery();
+      activated = !activated
+      setActivated(activated)
     }
   }
 
   export function inDeactivatedStateJQuery() {
-    $('#startButton').css('background-color','#4CAF50')
+    $('#startButton').css('background-color', '#4CAF50')
     $('#startButton').text("Activate")
-    if(activated != undefined) {
+    if (activated != undefined) {
       showMakeItHarderjQuery();
     }
   }
@@ -132,7 +130,7 @@ export function inInitialSetupState() {
 
   export function activateWhenDeactivateHarderJQuery() {
     console.log('trigger jquery')
-    $('#startButton').css({'background-color':'#f44336', 'font-size': '15px', 'width':'11em', 'height': '4em'})
+    $('#startButton').css({'background-color': '#f44336', 'font-size': '15px', 'width': '11em', 'height': '4em'})
     $('#startButton').text(`Click ${harderDeactivateClicksVal} times to deactivate`)
     madeItHarderjQuery()
   }
@@ -145,7 +143,7 @@ export function inInitialSetupState() {
   export function resetMadeItHarderjQuery() {
     $('#harderDeactivate').show();
     $('#harderDeactivateText').text("Make it harder to deactivate")
-    $('#startButton').css({'font-size': '17px', 'width':'9em', 'height': '3em'})
+    $('#startButton').css({'font-size': '17px', 'width': '9em', 'height': '3em'})
   }
 
   export function hideMakeItHarderjQuery() {
@@ -158,12 +156,12 @@ export function inInitialSetupState() {
     $('#harderDeactivate').show()
   }
 
-  export function warningTextjQuery() {
+  export function setWarningTextjQuery() {
     $("#warning").show();
-    $('body').css({'height':'390px'});
+    $('body').css({'height': '390px'});
   }
 
   export function clearWarningTextjQuery() {
     $("#warning").hide();
-    $('body').css({'height':'360px'});
+    $('body').css({'height': '360px'});
   }

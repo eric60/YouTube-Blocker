@@ -2,7 +2,7 @@ import {
   inInitialSetupState,
   clearErrorMessage,
   clearWarningTextjQuery,
-  warningTextjQuery,
+  setWarningTextjQuery,
   handleStartButton,
   inAlreadySetupState,
   inDeactivatedStateJQuery,
@@ -24,6 +24,10 @@ let harderDeactivateClicksVal = 0;
  * Service workers are by definition event-driven and will terminate on inactivity. This way Chrome can optimize performance and memory consumption of your extension
  * Service workers will be reinitialized when the event is dispatched
  * Your extension scripts should use message passing to communicate between a service worker and other parts of your extension. Currently that entails using sendMessage() and implementing chrome.runtime.onMessage in your extension service worker. Long term, you should plan to replace these calls with postMessage() and a service worker's message event handler.
+ * ===
+ * https://groups.google.com/a/chromium.org/g/chromium-extensions/c/UoogwQudJZo
+ * The background script (the service worker) doesn't have `document` or `window`, no access to the DOM or window since not connected to the window.
+ * This script is generally only necessary to process `chrome` events like chrome.tabs.onUpdated. In this case you don't need the background script at all, simply process DOM events in your visible page e.g. in the action popup.
  */
 
 
@@ -83,7 +87,7 @@ let harderDeactivateClicksVal = 0;
       if (data.apiKey === "") {
         console.log('trigger empty key')
         USER_API_KEY = DEFAULT_API_KEY;
-        warningTextjQuery()
+        setWarningTextjQuery()
       }
       else {
         clearWarningTextjQuery();
@@ -219,7 +223,7 @@ let harderDeactivateClicksVal = 0;
   }
 
   // ================================= Chrome Storage setters ======================================
-  function setActivated(value) {
+  export function setActivated(value) {
     chrome.storage.local.set({activated : value}, function(){
       console.log('You set chrome storage activated value to ' + value)
       if (chrome.runtime.lastError) {
@@ -229,7 +233,7 @@ let harderDeactivateClicksVal = 0;
   }
 
   // Start button needs to reinitialize when user sets new harderDeactivate value.
-  function setHarderDeactivateValue(value) {
+  export function setHarderDeactivateValue(value) {
     chrome.storage.local.set({harderDeactivate : value}, function(){
       console.log('set deactivate harder value to ' + value)
       harderDeactivate = value;
