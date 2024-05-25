@@ -50,7 +50,7 @@ chrome.storage.local.get(['activated'], function(data) {
     }
 });
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {  
+chrome.runtime.onMessage.addEventListener("change", function(request, sender, sendResponse) {
     if (request.query === 'Page updated')
     {
         console.log('Page updated');
@@ -65,7 +65,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         return;
     }
     prevUrls.push(currentUrl);
-    console.log("Initiating Youtube Study for new url: " + currentUrl);
+    console.log("Initiating Youtube Blocker for new url: " + currentUrl);
 
     chrome.runtime.sendMessage({url: currentUrl}, function(response) {
         console.log("-------Response from send url message: -----------");
@@ -94,7 +94,7 @@ function blockYoutubeUrl(videoCategoryString) {
         console.log('Blocking Activated value: ' + data.activated)
     
         if (data.activated === true) {  
-            console.log('---- Sent create notification to background ----');
+            console.log('---- Sent create notification to service_worker ----');
             // Block redirecting happens here
             location.replace('http://youtube.com')
             chrome.runtime.sendMessage({createNotification: true, videoCategoryString: videoCategoryString}, 

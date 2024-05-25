@@ -1,14 +1,13 @@
 {
   "name": "YouTube Blocker",
-  "version": "3.5",
+  "version": "4.0",
   "manifest_version": 3,
   "description": "Block non educational YouTube videos",
   "icons": {
     "128": "resources/icon.png"
   },
   "background": {
-    "scripts": ["js/jquery-3.4.1.min.js","js/background.js"],
-    "persistent": true
+    "service_worker": "js/service_worker.js"
   },
   "content_scripts": [
     {
