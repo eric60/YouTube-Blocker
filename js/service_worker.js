@@ -7,18 +7,23 @@ let countApiCalls = 0;
 let harderDeactivateClicksVal;
 
 /**
- * Service Workers docs
+ * ====== Service Workers Documenation ======
  * Service workers are by definition event-driven and will terminate on inactivity. This way Chrome can optimize performance and memory consumption of your extension
  * Service workers will be reinitialized when the event is dispatched
  */
 
+// ============================== All Event Listeners =========================================
+/**
+ * ALL listeners MUST be registered in the top level of the script because service_workers are not constantly running.
+ * https://developer.chrome.com/docs/extensions/develop/migrate/to-service-workers
+ * This works with a persistent background page because the page is constantly running and never reinitialized. In Manifest V3, the service worker will be reinitialized when the event is dispatched. This means that when the event fires, the listeners will not be immediately registered already at that exact moment in time (since they are added asynchronously), and the event will be missed.
+ * Instead, move the event listener registration to the top level of your script. This ensures that Chrome will be able to immediately find and invoke your action's click handler, even if your extension hasn't finished executing its startup logic.
+ */
+
+
 /**
  * we addEventListener for messages from content script to call YouTube Data API to determine if the video is allowed or now
  * Note: fetch request doesn't work in content script in context of web page due to CORs restrictions so we have to do this login in the service_worker
- * Note: listeners MUST be registered in the top level of the script because service_workers are not constantly running.
-    * https://developer.chrome.com/docs/extensions/develop/migrate/to-service-workers
-    * This works with a persistent background page because the page is constantly running and never reinitialized. In Manifest V3, the service worker will be reinitialized when the event is dispatched. This means that when the event fires, the listeners will not be immediately registered already at that exact moment in time (since they are added asynchronously), and the event will be missed.
-    * Instead, move the event listener registration to the top level of your script. This ensures that Chrome will be able to immediately find and invoke your action's click handler, even if your extension hasn't finished executing its startup logic.
 */
 chrome.runtime.onMessage.addEventListener("change",
   function(request, sender, sendResponse) {
@@ -44,6 +49,15 @@ chrome.runtime.onMessage.addEventListener("change",
       return true; // return true to indicate you want to send a response asynchronously
     }
 });
+
+// notify content script when youtube dynamically updates DOM to prevent re fetching API
+chrome.webNavigation.onHistoryStateUpdated.addEventListener("change", function(details) {
+  console.log('page updated')
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {query: "Page updated"}, function(response) {
+    });
+  });
+})
 
 $(document).ready(function() {
 
@@ -74,16 +88,6 @@ $(document).ready(function() {
       }
     }
 
-})
-
-
-// notify content script when youtube dynamically updates DOM to prevent re fetching API
-chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
-  console.log('page updated')
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {query: "Page updated"}, function(response) {
-    });
-  });
 })
 
   function handleYoutubeAPIError(json) {
