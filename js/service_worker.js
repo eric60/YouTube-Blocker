@@ -6,10 +6,11 @@ let apiKeysQueue = []
 let countApiCalls = 0;
 let harderDeactivateClicksVal;
 
+// ======================== Service Workers Documentation =========================================
 /**
- * ====== Service Workers Documenation ======
  * Service workers are by definition event-driven and will terminate on inactivity. This way Chrome can optimize performance and memory consumption of your extension
  * Service workers will be reinitialized when the event is dispatched
+ * Your extension scripts should use message passing to communicate between a service worker and other parts of your extension. Currently that entails using sendMessage() and implementing chrome.runtime.onMessage in your extension service worker. Long term, you should plan to replace these calls with postMessage() and a service worker's message event handler.
  */
 
 // ============================== All Event Listeners =========================================
@@ -36,13 +37,13 @@ chrome.runtime.onMessage.addEventListener("change",
     } else if (messageForBlockingUrlRequest) {
       console.log('request url: ' + request.url);
 
-      initiateisAllowed(request.url).then(json => {
-        if (json.error) {
-          handleYoutubeAPIError(json)
+      initiateisAllowed(request.url).then(jsonData => {
+        if (jsonData.error) {
+          handleYoutubeAPIError(jsonData)
         }
         else {
           $('.errorMessage').text("")
-          sendResponse({json: json});
+          sendResponse({json: jsonData});
         }
       })
 
