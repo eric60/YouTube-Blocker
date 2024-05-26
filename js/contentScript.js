@@ -73,9 +73,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
  function sendMessageToServiceWorkerBackgroundToBlockYoutubeVideo(currentUrl) {
      chrome.runtime.sendMessage({action: "blockYoutubeVideo", url: currentUrl}, function(response) {
-        if (response.json == undefined) {return;}
-
-        // blockYoutubeUrl function MUST be a callback function because the service_worker calling the Youtube Data API is an async function, if not callback then it would NOT execute
         processYoutubeData(response.json, blockYoutubeUrl)
     });
  }
@@ -98,7 +95,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 
 function blockYoutubeUrl(videoCategoryString) {
-    console.log('in blockYoutubeUrl() function')
+    console.log('in the blockYoutubeUrl() function')
     chrome.storage.local.get(['activated'], function(data) {
         console.log('Blocking Activated value: ' + data.activated)
     
@@ -106,13 +103,16 @@ function blockYoutubeUrl(videoCategoryString) {
             blockTheYoutubeVideo()
             console.log('----> Sent message to the service_worker for action (createNotification). Response: ' + response);
             chrome.runtime.sendMessage({action: "createNotification", videoCategoryString: videoCategoryString}, function(response) {
+                console.log(response);
             });
+
         }
     });
 }
 
 function blockTheYoutubeVideo() {
-     location.replace('https://youtube.com')
+    location.replace('https://youtube.com')
+    console.log("in the blockTheYoutubeVideo() function after replacing the url")
 }
 
 

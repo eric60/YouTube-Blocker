@@ -42,7 +42,7 @@ let countApiCalls = 0;
   */
 chrome.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {
-      console.log(LOG_SERVICE_WORKER_PREFIX + "In chrome.runtime.onMessage.addListener()")
+      console.log(LOG_SERVICE_WORKER_PREFIX + "In chrome.runtime.onMessage.addListener() 1")
 
       if (message.action == "createNotification") {
           console.log(LOG_SERVICE_WORKER_PREFIX + "received message for action: createNotification")
@@ -53,11 +53,12 @@ chrome.runtime.onMessage.addListener(
           }
           showNotification(message);
       }
+      return true;
 })
 
   chrome.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {
-      console.log(LOG_SERVICE_WORKER_PREFIX + "In chrome.runtime.onMessage.addListener()")
+      console.log(LOG_SERVICE_WORKER_PREFIX + "In chrome.runtime.onMessage.addListener() 2")
 
       if (message.action == "openOptionsPage") {
           console.log(LOG_SERVICE_WORKER_PREFIX + "received message for action: openOptionsPage")
@@ -74,9 +75,9 @@ chrome.runtime.onMessage.addListener(
                 sendResponse({json: jsonData});
               }
             })
-          return true; // return true to indicate you want to send back a response asynchronously so that the message port on contentScript doesn't close before a response is received. This fixes the error: "chrome extension cannot access message before initialization" and Error: "Unchecked runtime.lastError: The message port closed before a response was received." and Error: "Unchecked runtime.lastError: Could not establish connection. Receiving end does not exist." source: https://stackoverflow.com/a/57608759/9882969.
-        // return false scenario: this is just telling the API to keep the messaging port open indefinitely, which will never be used by you, so it's just a memory leak source.
       }
+       return true; // return true to indicate you want to send back a response asynchronously so that the message port on contentScript doesn't close before a response is received. This fixes the error: "chrome extension cannot access message before initialization" and Error: "Unchecked runtime.lastError: The message port closed before a response was received." and Error: "Unchecked runtime.lastError: Could not establish connection. Receiving end does not exist." source: https://stackoverflow.com/a/57608759/9882969.
+        // return false scenario: this is just telling the API to keep the messaging port open indefinitely, which will never be used by you, so it's just a memory leak source.
   });
 
   chrome.storage.local.get('apiKey', function(data) {
@@ -85,7 +86,7 @@ chrome.runtime.onMessage.addListener(
 
   // notify content script when YouTube dynamically updates DOM to prevent re fetching API
   chrome.webNavigation.onHistoryStateUpdated.addListener(function() {
-    console.log('page updated')
+    console.log('The page updated')
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {query: "Page updated"}, function(response) {
       });

@@ -4,12 +4,8 @@ const DEFAULT_API_KEY = "No Key Set";
 let USER_API_KEY = DEFAULT_API_KEY
 let harderDeactivateClicksVal = 10;
 
-var jQueryScript = document.createElement('script');
-jQueryScript.setAttribute('src', 'js/jquery-3.4.1.min.js');
-document.head.appendChild(jQueryScript);
 
-// we have to wait a moment before the document has jQuery as a part of it.
-setTimeout(function() {
+$(document).ready(function () {
 
   // ============================== Default States =========================================
   $('#options').on('click', function () {
@@ -281,4 +277,4 @@ setTimeout(function() {
     $('body').css({'height': '390px'});
   }
   
-}, 10);
+});
