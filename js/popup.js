@@ -2,7 +2,7 @@ let activated = false;
 let harderToDeactivate = false;
 const DEFAULT_API_KEY = "No Key Set";
 let USER_API_KEY = DEFAULT_API_KEY
-let harderDeactivateClicksVal = 0;
+let harderDeactivateClicksVal = 10;
 
 var jQueryScript = document.createElement('script');
 jQueryScript.setAttribute('src', 'js/jquery-3.4.1.min.js');
@@ -40,7 +40,7 @@ setTimeout(function() {
     chrome.storage.local.get('harderDeactivateClicks', function(data) {
         let value = data.harderDeactivateClicks;
         if (!value) {
-          harderDeactivateClicksVal = "10";
+          harderDeactivateClicksVal = 10;
         }
         else {
           harderDeactivateClicksVal = value;
@@ -91,7 +91,7 @@ setTimeout(function() {
     }
     else {
       setUpAlreadySetupState()
-      if (data.apiKey === "") {
+      if (data.apiKey === "" || data.apiKey === undefined) {
         console.log('trigger empty key')
         USER_API_KEY = DEFAULT_API_KEY;
         setupWarningTextjQuery()
@@ -129,7 +129,6 @@ setTimeout(function() {
   function setupInInitialSetupState() {
     $('#startButton').hide();
     $('#text').hide();
-    setupClearWarningTextjQuery();
     $("#options").text("Set your YouTube key first to start blocking");
     $('#harderDeactivateText').hide()
     $('#harderDeactivate').hide()
