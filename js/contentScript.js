@@ -59,7 +59,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
  function initiateYoutubeVideoBlocking() {
     let currentUrl = location.href;
     if (prevUrls.includes(currentUrl)) {
-        console.log('--------- Url already fetched.Not fetching again. ---------')
+        console.log('--------- Url already fetched. Not fetching again. ---------')
         return;
     }
     prevUrls.push(currentUrl);
@@ -99,6 +99,7 @@ function blockYoutubeUrl(videoCategoryString) {
             blockTheYoutubeVideo()
             chrome.runtime.sendMessage({createNotification: true, videoCategoryString: videoCategoryString}, 
                 function(response) {
+                // do nothing
             });           
         }
     });

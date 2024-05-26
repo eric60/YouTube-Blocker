@@ -97,7 +97,7 @@ setTimeout(function() {
         setupWarningTextjQuery()
       }
       else {
-        console.log('---------------- API Key:' + data.apiKey + " ----------------")
+        // console.log('---------------- API Key:' + data.apiKey + " ----------------")
         USER_API_KEY = data.apiKey
       }
     }

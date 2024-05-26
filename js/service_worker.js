@@ -21,7 +21,9 @@
  * Instead, move the event listener registration to the top level of your script. This ensures that Chrome will be able to immediately find and invoke your action's click handler, even if your extension hasn't finished executing its startup logic.
  */
 
-let LOG_SERVICE_WORKER_PREFIX = "Youtube Blocker service_worker.js: "
+let LOG_SERVICE_WORKER_PREFIX = "LOG for Youtube Blocker service_worker.js ---> "
+let USER_API_KEY = "No Key Set"
+let countApiCalls = 0;
   /*
    * we addEventListener for messages from content script to call YouTube Data API to determine if the video is allowed or now
    * Note: fetch request doesn't work in content script in context of web page due to CORs restrictions so we have to do the fetch API call in the service_worker
@@ -30,7 +32,9 @@ let LOG_SERVICE_WORKER_PREFIX = "Youtube Blocker service_worker.js: "
     function(message, sender, sendResponse) {
       let isMessageForBlockingUrlRequest = message.url;
 
+      console.log(LOG_SERVICE_WORKER_PREFIX + "In chrome.runtime.onMessage.addListener()")
       if (message.createNotification == true) {
+          console.log(LOG_SERVICE_WORKER_PREFIX + "received message for createNotification")
           let videoCategoryString = message.videoCategoryString;
           let message = `You were watching a ${videoCategoryString} video so it was blocked.`
           showNotification(message);
@@ -38,10 +42,11 @@ let LOG_SERVICE_WORKER_PREFIX = "Youtube Blocker service_worker.js: "
         console.log(LOG_SERVICE_WORKER_PREFIX + "received message for openOptionsPage")
          chrome.runtime.openOptionsPage();
       } else if (isMessageForBlockingUrlRequest) {
+        console.log(LOG_SERVICE_WORKER_PREFIX + "received message for youtube video blocking")
         console.log('request url: ' + message.url);
 
         initiateIsAllowed(message.url).then(jsonData => {
-          if (jsonData.error) {
+          if (jsonData.error != undefined) {
             handleYoutubeAPIError(jsonData)
           }
           else {
@@ -53,7 +58,11 @@ let LOG_SERVICE_WORKER_PREFIX = "Youtube Blocker service_worker.js: "
       }
   });
 
-  // notify content script when youtube dynamically updates DOM to prevent re fetching API
+  chrome.storage.local.get('apiKey', function(data) {
+     USER_API_KEY = data.apiKey
+  })
+
+  // notify content script when YouTube dynamically updates DOM to prevent re fetching API
   chrome.webNavigation.onHistoryStateUpdated.addListener(function() {
     console.log('page updated')
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -65,7 +74,7 @@ let LOG_SERVICE_WORKER_PREFIX = "Youtube Blocker service_worker.js: "
 
   function handleYoutubeAPIError(json) {
     let message = json.error.message;
-    console.log("------ API error trigger: " + message)
+    console.log("---> API error trigger: " + message)
 
     let showingMessage = "Your Youtube key is invalid. Please make sure it is correct in the options page"
 
@@ -86,7 +95,7 @@ let LOG_SERVICE_WORKER_PREFIX = "Youtube Blocker service_worker.js: "
     }
 
     const restAPI = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${USER_API_KEY}&fields=items(snippet(categoryId))`
-    console.log("--- restAPI call: ")
+    console.log("---> restAPI call: ")
     console.log(restAPI);
 
     countApiCalls++;
