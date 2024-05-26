@@ -14,7 +14,7 @@
     {
       "matches": ["*://*.youtube.com/*"],
       "run_at": "document_idle",
-      "js": ["js/jquery-3.4.1.min.js", "js/contentScript.js"]
+      "js": ["js/contentScript.js"]
     }
   ],
   "action": {

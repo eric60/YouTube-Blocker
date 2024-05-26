@@ -82,7 +82,7 @@ setTimeout(function() {
   }
 
   function activateOptionsPage() {
-   chrome.runtime.sendMessage({"action": "openOptionsPage"});
+   chrome.runtime.sendMessage({action: "openOptionsPage"});
   }
 
   chrome.storage.local.get('apiKey', function(data) {
@@ -281,4 +281,4 @@ setTimeout(function() {
     $('body').css({'height': '390px'});
   }
   
-}, 30);
+}, 10);

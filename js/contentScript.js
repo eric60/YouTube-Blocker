@@ -63,28 +63,36 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         return;
     }
     prevUrls.push(currentUrl);
+    if (currentUrl == "https://www.youtube.com/") {
+        console.log("Not messaging service_worker for action blockYoutubeVideo because url doesn't have a video")
+        return;
+    }
     console.log("Initiating Youtube Blocker for new url: " + currentUrl);
-    sendMessageToServiceWorkerBackgroundToFetchYoutubeData(currentUrl)
+    sendMessageToServiceWorkerBackgroundToBlockYoutubeVideo(currentUrl)
  }
 
- function sendMessageToServiceWorkerBackgroundToFetchYoutubeData(currentUrl) {
-     chrome.runtime.sendMessage({url: currentUrl}, function(response) {
-        console.log("-------Response from send url message: -----------");
+ function sendMessageToServiceWorkerBackgroundToBlockYoutubeVideo(currentUrl) {
+     chrome.runtime.sendMessage({action: "blockYoutubeVideo", url: currentUrl}, function(response) {
+        if (response.json == undefined) {return;}
+
+        // blockYoutubeUrl function MUST be a callback function because the service_worker calling the Youtube Data API is an async function, if not callback then it would NOT execute
         processYoutubeData(response.json, blockYoutubeUrl)
     });
  }
 
-  function processYoutubeData(json, callbackBlockYoutubeUrl) {
+  function processYoutubeData(json, blockYoutubeUrlCallbackFunction) {
+    if (json == undefined) {return;}
+
     const allowedIds = ['26', '27', '28']; // video category ids for Howto & Style, Education, Science & technology
     let videoCategory = json.items[0].snippet.categoryId;
     let videoCategoryString = youtubeCategoryMappings[videoCategory];
     console.log("YouTube Video Category: " + videoCategoryString);
 
     let isAllowedResult = allowedIds.includes(videoCategory);
-
     console.log('isAllowedUrl: ' + isAllowedResult);
+
     if(isAllowedResult == false) {
-        callbackBlockYoutubeUrl(videoCategoryString);
+        blockYoutubeUrlCallbackFunction(videoCategoryString);
     }
   }
 
@@ -94,19 +102,17 @@ function blockYoutubeUrl(videoCategoryString) {
     chrome.storage.local.get(['activated'], function(data) {
         console.log('Blocking Activated value: ' + data.activated)
     
-        if (data.activated === true) {  
-            console.log('---- Sent create notification to service_worker ----');
+        if (data.activated === true) {
             blockTheYoutubeVideo()
-            chrome.runtime.sendMessage({createNotification: true, videoCategoryString: videoCategoryString}, 
-                function(response) {
-                // do nothing
-            });           
+            console.log('----> Sent message to the service_worker for action (createNotification). Response: ' + response);
+            chrome.runtime.sendMessage({action: "createNotification", videoCategoryString: videoCategoryString}, function(response) {
+            });
         }
     });
 }
 
 function blockTheYoutubeVideo() {
-     location.replace('http://youtube.com')
+     location.replace('https://youtube.com')
 }
 
 
