@@ -103,6 +103,10 @@ function blockYoutubeUrl(videoCategoryString) {
 }
 
 
-
+  export function activateOptionsPage() {
+    if (chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    }
+  }
 
 

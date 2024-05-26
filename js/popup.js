@@ -1,4 +1,16 @@
-import {activateOptionsPage, activated, harderDeactivate, setHarderDeactivateValue} from "./service_worker.js";
+import {activated, harderDeactivate, setHarderDeactivateValue} from "./service_worker.js";
+import activateOptionsPage from "./contentScript"
+
+var jQueryScript = document.createElement('script');
+jQueryScript.setAttribute('src', './jquery-3.4.1.min.js');
+document.head.appendChild(jQueryScript);
+
+/*
+setTimeout(function() {
+  // Add the rest of your code here, as we have to wait a moment before the document has jQuery as a part of it.
+  $("body").html("<h1>It Works!</h1>");
+}, 1000);
+*/
 
 
 // =================== Popup States ===================
@@ -6,7 +18,7 @@ import {activateOptionsPage, activated, harderDeactivate, setHarderDeactivateVal
     $('#startButton').hide();
     $('#text').hide();
     clearWarningTextjQuery();
-    $("#options").text("Set your YouTube key to start blocking");
+    $("#options").text("Set your YouTube key first to start blocking");
     $('#harderDeactivateText').hide()
     $('#harderDeactivate').hide()
   }

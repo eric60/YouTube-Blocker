@@ -55,7 +55,7 @@ let harderDeactivateClicksVal = 0;
       } else if (messageForBlockingUrlRequest) {
         console.log('request url: ' + request.url);
 
-        initiateisAllowed(request.url).then(jsonData => {
+        initiateIsAllowed(request.url).then(jsonData => {
           if (jsonData.error) {
             handleYoutubeAPIError(jsonData)
           }
@@ -111,7 +111,7 @@ let harderDeactivateClicksVal = 0;
     showNotification(showingMessage)
   }
 
-  async function initiateisAllowed(url) {
+  async function initiateIsAllowed(url) {
     let videoId = parseToId(url);
     console.log('New Youtube video id:' + videoId)
 
