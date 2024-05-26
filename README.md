@@ -1,5 +1,5 @@
 # [YouTube Blocker Chrome Extension](https://chrome.google.com/webstore/detail/youtube-study/oohcfepaadomnocmmkejhnfhcddpdpab?authuser=0&hl=en)
-<img src="https://github.com/erics98/ChromeExtension/blob/master/resources/icon.png" width="130" height="100">
+<img src="https://github.com/eric60/YouTube-Blocker/blob/master/resources/icon.png" width="130" height="100">
 
 # What & Why
 YouTube Blocker blocks YouTube videos not in the Education, Science & Technology, or Howto & Style categories so you can focus on educational videos.
@@ -7,7 +7,7 @@ YouTube Blocker blocks YouTube videos not in the Education, Science & Technology
 # How
 ![image](https://user-images.githubusercontent.com/30248575/161360734-bc649ddf-7fa7-4dde-ace3-36dc7c446a58.png)
 
-Diagram [here](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ/view?usp=sharing)
+[Diagram Link here](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ/view?usp=sharing)
 
 ### Notes
 - Each page has a different local storage
@@ -17,6 +17,9 @@ Diagram [here](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ
 so only the Background Script can run the CORS API requests.
 - Content Script sends a Chrome message to the Background Script on whether to block the YouTube video or not
 - Logo was made in Adobe Photoshop
+- Background page replaced with Service Worker
+  - background pages provide an environment that lives independent of any other window or tab. This allows extensions to observe and act in response to events.
+  - 
 
 ### Resources Used
 * Chrome Extension API

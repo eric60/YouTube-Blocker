@@ -1,7 +1,5 @@
-
-let firstRun = false;
 let prevUrls = [];
-let activated;
+let activated = false;
 const youtubeCategoryMappings = {
     "1": "Film & Animation",
     "2": "Autos & Vehicles",
@@ -43,68 +41,78 @@ chrome.storage.local.get(['activated'], function(data) {
 
     if (activated == true) {
         console.log('Blocking is activated. Initiating blocking')
-        initiate();
+        initiateYoutubeVideoBlocking();
     } 
     else {
         console.log('Blocking not activated. Not initiating')
     }
 });
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {  
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.query === 'Page updated')
     {
         console.log('Page updated');
-        initiate();
+        initiateYoutubeVideoBlocking();
     }
  });
  
- function initiate() {
+ function initiateYoutubeVideoBlocking() {
     let currentUrl = location.href;
     if (prevUrls.includes(currentUrl)) {
-        console.log('--------- Url already fetched.Not fetching again. ---------')
+        console.log('--------- Url already fetched. Not fetching again. ---------')
         return;
     }
     prevUrls.push(currentUrl);
-    console.log("Initiating Youtube Study for new url: " + currentUrl);
+    if (currentUrl == "https://www.youtube.com/") {
+        console.log("Not messaging service_worker for action blockYoutubeVideo because url doesn't have a video")
+        return;
+    }
+    console.log("Initiating Youtube Blocker for new url: " + currentUrl);
+    sendMessageToServiceWorkerBackgroundToBlockYoutubeVideo(currentUrl)
+ }
 
-    chrome.runtime.sendMessage({url: currentUrl}, function(response) {
-        console.log("-------Response from send url message: -----------");
+ function sendMessageToServiceWorkerBackgroundToBlockYoutubeVideo(currentUrl) {
+     chrome.runtime.sendMessage({action: "blockYoutubeVideo", url: currentUrl}, function(response) {
         processYoutubeData(response.json, blockYoutubeUrl)
     });
  }
 
-  function processYoutubeData(json, callbackBlockYoutubeUrl) {
+  function processYoutubeData(json, blockYoutubeUrlCallbackFunction) {
+    if (json == undefined) {return;}
+
     const allowedIds = ['26', '27', '28']; // video category ids for Howto & Style, Education, Science & technology
     let videoCategory = json.items[0].snippet.categoryId;
     let videoCategoryString = youtubeCategoryMappings[videoCategory];
     console.log("YouTube Video Category: " + videoCategoryString);
 
     let isAllowedResult = allowedIds.includes(videoCategory);
-
     console.log('isAllowedUrl: ' + isAllowedResult);
+
     if(isAllowedResult == false) {
-        callbackBlockYoutubeUrl(videoCategoryString);
+        blockYoutubeUrlCallbackFunction(videoCategoryString);
     }
   }
 
 
 function blockYoutubeUrl(videoCategoryString) {
-    console.log('in blockYoutubeUrl')
+    console.log('in the blockYoutubeUrl() function')
     chrome.storage.local.get(['activated'], function(data) {
         console.log('Blocking Activated value: ' + data.activated)
     
-        if (data.activated === true) {  
-            console.log('---- Sent create notification to background ----');
-            // Block redirecting happens here
-            location.replace('http://youtube.com')
-            chrome.runtime.sendMessage({createNotification: true, videoCategoryString: videoCategoryString}, 
-                function(response) {
-            });           
+        if (data.activated === true) {
+            blockTheYoutubeVideo()
+            console.log('----> Sent message to the service_worker for action (createNotification). Response: ' + response);
+            chrome.runtime.sendMessage({action: "createNotification", videoCategoryString: videoCategoryString}, function(response) {
+                console.log(response);
+            });
+
         }
     });
 }
 
-
-
+function blockTheYoutubeVideo() {
+    location.replace('https://youtube.com')
+    console.log("in the blockTheYoutubeVideo() function after replacing the url")
+}
 
 

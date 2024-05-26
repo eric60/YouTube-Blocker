@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Youtube Blocker Options</title>
-    <script src="../js/jquery-3.4.1.min.js"></script>
-    <script src="../css/bootstrap/bootstrap.min.js"></script>
-    <script src="../js/options.js"></script>
+    <title>YouTube Blocker Options</title>
+    <script src="../js/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="../css/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../js/options.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="../css/optionsStyle.css">
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
 </head>
     <body class="container">
-        <h2>Youtube Blocker Setup</h2>
-        <p>You must create your personal free Youtube Data Key so the extension knows what videos to block using that key.
-            <br> You do not have to set any payment method.
-        </p>
-        <h3>Setup (6-10 minutes)</h3>
+        <h2>YouTube Blocker Setup</h2>
+        <p>You must create a free key from YouTube Data API so that the extension knows what videos to block using that key.</p>
+        <h3>Setup (10 minutes)</h3>
         <ol>
-            <li>Go to <a href="https://cloud.google.com/">Google's Cloud Platform (GCP)</a> and create a free account using your google account</li>
-            <li>Create a new project and name it something like "Personal Youtube Data Project"</li>
+            <li>Go to <a href="https://cloud.google.com/">Google's Cloud Platform (GCP)</a>. You should already have an account if you are signed in to a google account. If not, then create a free account.</li>
+            <li>Note: You do not have to set any payment method at any time to use this extension.</li>
+                <ul>
+                    <li>Question: <a href="https://www.google.com/search?q=is+youtube+data+api+free&oq=is+youtube+data+api+free&gs_lcrp=EgZjaHJvbWUqCQgAEEUYOxiABDIJCAAQRRg7GIAEMg0IARAAGIYDGIAEGIoFMg0IAhAAGIYDGIAEGIoFMg0IAxAAGIYDGIAEGIoFMg0IBBAAGIYDGIAEGIoFMg0IBRAAGIYDGIAEGIoFMgoIBhAAGIAEGKIE0gEINjUxN2owajGoAgCwAgA&sourceid=chrome&ie=UTF-8">Is YouTube Data API free? </a> Yes. Your requests will stop working after you reach the daily API request quota of 10,000 units per day.</li>
+                </ul>
+            <li>Go to Console on the top right. Then create a new project and name it something like "My Personal YouTube Blocker Project". You can also click on the drop-down on the top left and click "New Project" from there.</li>
+            <img src="../resources/YouTube_Blocker_Options_Image_1.png" width="75%" height="75%">
             <li>Click the left top navigation menu and go to <b>'APIs and Services'</b> </li>
             <li>You should be on your dashboard now. Click 'Enable APIs and Services', search for Youtube Data API v3, click it, and enable it. 
                 You should see a checkmark with 'API Enabled'
                 <ul>
                     <li>If you don't see that, then click 'Manage' and enable it on the Youtube Data Dashboard</li>
-                    <li>Please submit an issue on the chrome extension store's 'Support' tab if you have trouble and I will assist you.</li>
                 </ul>
             </li>
             <li>Go back to 'APIs and Services'</li>
