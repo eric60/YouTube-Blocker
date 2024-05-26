@@ -12,6 +12,10 @@ img {
   border-style: none;
 }
 
+#myForm {
+  margin-bottom: 25px;
+}
+
 h2 {
   font-family: 'Roboto', sans-serif;
   color:Tomato;

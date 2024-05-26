@@ -7,7 +7,7 @@ YouTube Blocker blocks YouTube videos not in the Education, Science & Technology
 # How
 ![image](https://user-images.githubusercontent.com/30248575/161360734-bc649ddf-7fa7-4dde-ace3-36dc7c446a58.png)
 
-Diagram [here](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ/view?usp=sharing)
+[Diagram Link here](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ/view?usp=sharing)
 
 ### Notes
 - Each page has a different local storage

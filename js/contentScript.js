@@ -41,22 +41,22 @@ chrome.storage.local.get(['activated'], function(data) {
 
     if (activated == true) {
         console.log('Blocking is activated. Initiating blocking')
-        initiate();
+        initiateYoutubeVideoBlocking();
     } 
     else {
         console.log('Blocking not activated. Not initiating')
     }
 });
 
-chrome.runtime.onMessage.addEventListener("change", function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.query === 'Page updated')
     {
         console.log('Page updated');
-        initiate();
+        initiateYoutubeVideoBlocking();
     }
  });
  
- function initiate() {
+ function initiateYoutubeVideoBlocking() {
     let currentUrl = location.href;
     if (prevUrls.includes(currentUrl)) {
         console.log('--------- Url already fetched.Not fetching again. ---------')
@@ -64,8 +64,11 @@ chrome.runtime.onMessage.addEventListener("change", function(request, sender, se
     }
     prevUrls.push(currentUrl);
     console.log("Initiating Youtube Blocker for new url: " + currentUrl);
+    sendMessageToServiceWorkerBackgroundToFetchYoutubeData(currentUrl)
+ }
 
-    chrome.runtime.sendMessage({url: currentUrl}, function(response) {
+ function sendMessageToServiceWorkerBackgroundToFetchYoutubeData(currentUrl) {
+     chrome.runtime.sendMessage({url: currentUrl}, function(response) {
         console.log("-------Response from send url message: -----------");
         processYoutubeData(response.json, blockYoutubeUrl)
     });
@@ -87,14 +90,13 @@ chrome.runtime.onMessage.addEventListener("change", function(request, sender, se
 
 
 function blockYoutubeUrl(videoCategoryString) {
-    console.log('in blockYoutubeUrl')
+    console.log('in blockYoutubeUrl() function')
     chrome.storage.local.get(['activated'], function(data) {
         console.log('Blocking Activated value: ' + data.activated)
     
         if (data.activated === true) {  
             console.log('---- Sent create notification to service_worker ----');
-            // Block redirecting happens here
-            location.replace('http://youtube.com')
+            blockTheYoutubeVideo()
             chrome.runtime.sendMessage({createNotification: true, videoCategoryString: videoCategoryString}, 
                 function(response) {
             });           
@@ -102,11 +104,8 @@ function blockYoutubeUrl(videoCategoryString) {
     });
 }
 
-
-  export function activateOptionsPage() {
-    if (chrome.runtime.openOptionsPage) {
-      chrome.runtime.openOptionsPage();
-    }
-  }
+function blockTheYoutubeVideo() {
+     location.replace('http://youtube.com')
+}
 
 
