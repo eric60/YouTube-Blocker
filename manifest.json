@@ -7,14 +7,14 @@
     "128": "resources/icon.png"
   },
   "background": {
-    "service_worker": "js/service_worker.js",
+    "service_worker": "js/youtubeBlocker_service_worker.js",
     "type": "module"
   },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
       "run_at": "document_idle",
-      "js": ["js/contentScript.js"]
+      "js": ["js/youtubeBlocker_ContentScript.js"]
     }
   ],
   "action": {

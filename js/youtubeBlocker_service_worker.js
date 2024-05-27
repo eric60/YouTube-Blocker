@@ -40,27 +40,15 @@ let countApiCalls = 0;
    * we addEventListener for messages from content script to call YouTube Data API to determine if the video is allowed or now
    * Note: fetch request doesn't work in content script in context of web page due to CORs restrictions so we have to do the fetch API call in the service_worker
   */
-chrome.runtime.onMessage.addListener(
+  chrome.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {
-      console.log(LOG_SERVICE_WORKER_PREFIX + "In chrome.runtime.onMessage.addListener() 1")
+      console.log(LOG_SERVICE_WORKER_PREFIX + "In chrome.runtime.onMessage.addListener()")
 
       if (message.action == "createNotification") {
           console.log(LOG_SERVICE_WORKER_PREFIX + "received message for action: createNotification")
-          let videoCategoryString = message.videoCategoryString;
-          let message = "Your YouTube Video was blocked because it was not in the allow list."
-          if (videoCategoryString != undefined) {
-              message = `You were watching a ${videoCategoryString} video so it was blocked.`
-          }
-          showNotification(message);
-      }
-      return true;
-})
-
-  chrome.runtime.onMessage.addListener(
-    function(message, sender, sendResponse) {
-      console.log(LOG_SERVICE_WORKER_PREFIX + "In chrome.runtime.onMessage.addListener() 2")
-
-      if (message.action == "openOptionsPage") {
+          let messageToShow = `You were watching a ${message.videoCategoryString} video so it was blocked.`
+          showNotification(messageToShow);
+      } else if (message.action == "openOptionsPage") {
           console.log(LOG_SERVICE_WORKER_PREFIX + "received message for action: openOptionsPage")
           chrome.runtime.openOptionsPage();
       } else if (message.action == "blockYoutubeVideo" && message.url) {
@@ -74,10 +62,9 @@ chrome.runtime.onMessage.addListener(
               else {
                 sendResponse({json: jsonData});
               }
-            })
+          })
       }
-       return true; // return true to indicate you want to send back a response asynchronously so that the message port on contentScript doesn't close before a response is received. This fixes the error: "chrome extension cannot access message before initialization" and Error: "Unchecked runtime.lastError: The message port closed before a response was received." and Error: "Unchecked runtime.lastError: Could not establish connection. Receiving end does not exist." source: https://stackoverflow.com/a/57608759/9882969.
-        // return false scenario: this is just telling the API to keep the messaging port open indefinitely, which will never be used by you, so it's just a memory leak source.
+      return true; // We MUST return true to indicate we want to send back a response asynchronously so that the message port here doesn't close before a response is returned back to the contentScript. Source: https://stackoverflow.com/a/57608759/9882969. What's a scenario for returning false? This is just telling the API to keep the messaging port open indefinitely, which if you don't need then return false as it's just a potential memory leak source.
   });
 
   chrome.storage.local.get('apiKey', function(data) {
@@ -88,6 +75,9 @@ chrome.runtime.onMessage.addListener(
   chrome.webNavigation.onHistoryStateUpdated.addListener(function() {
     console.log('The page updated')
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      if (tabs == undefined || tabs[0] == undefined) {
+          return;
+      }
       chrome.tabs.sendMessage(tabs[0].id, {query: "Page updated"}, function(response) {
       });
     });
@@ -96,15 +86,13 @@ chrome.runtime.onMessage.addListener(
 
   function handleYoutubeAPIError(json) {
     let message = json.error.message;
-    console.log("---> API error trigger: " + message)
-
-    let showingMessage = "Your Youtube key is invalid. Please make sure it is correct in the options page"
+    console.log("---> Youtube Data API error trigger: " + message)
 
     let isBadRequest = message.indexOf("not valid");
-    if (!isBadRequest) {
-      showingMessage = "The Youtube key call limit was reached so it will not block videos anymore. It will reset at midnight PT/3 am EST. You can set a new key in the options page."
+    if (isBadRequest) {
+        message = "Your Youtube key is invalid. Please make sure it is correct in the options page."
     }
-    showNotification(showingMessage)
+    showNotification(message)
   }
 
   async function initiateIsAllowed(url) {
