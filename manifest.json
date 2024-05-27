@@ -14,7 +14,7 @@
     {
       "matches": ["*://*.youtube.com/*"],
       "run_at": "document_idle",
-      "js": ["js/contentScript.js"]
+      "js": ["js/youtubeBlocker_ContentScript.js"]
     }
   ],
   "action": {

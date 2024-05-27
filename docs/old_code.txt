@@ -1,4 +1,4 @@
-import {activated, harderDeactivate, setHarderDeactivateValue} from "./service_worker.js";
+import {activated, harderDeactivate, setHarderDeactivateValue} from "./youtubeBlocker_service_worker.js";
 import activateOptionsPage from "./contentScript"
 
 var jQueryScript = document.createElement('script');
