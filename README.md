@@ -4,6 +4,16 @@
 # What & Why
 YouTube Blocker blocks YouTube videos not in the Education, Science & Technology, or Howto & Style categories so you can focus on educational videos.
 
+# Setup 
+1. fork repo if desired
+2. clone repo locally 
+2. go to chrome://extensions
+3. Press `Load unpacked` in top left corner 
+4. Select your cloned youtube-blocker folder
+5. Enable the extension and develop in your IDE. 
+6. Changes should reflect automatically after you save
+7. If not, then press the refresh button on the extension card in the chrome://extensions page
+
 # How
 ![image](https://user-images.githubusercontent.com/30248575/161360734-bc649ddf-7fa7-4dde-ace3-36dc7c446a58.png)
 
@@ -23,22 +33,9 @@ so only the Background Script can run the CORS API requests.
 - Logo was made in Adobe Photoshop
 - Background page replaced with Service Worker
   - background pages provide an environment that lives independent of any other window or tab. This allows extensions to observe and act in response to events.
-  - 
-
-### Resources Used
-* Chrome Extension API
-* Youtube Data API
-
-# Setup 
-1. fork repo if desired
-2. clone repo locally 
-2. go to chrome://extensions
-3. Press `Load unpacked` in top left corner 
-4. Select your cloned youtube-blocker folder
-5. Enable the extension and develop in your IDE. 
-6. Changes should reflect automatically after you save
-7. If not, then press the refresh button on the extension card in the chrome://extensions page
-
+- Resources Used:
+  * Chrome Extension API
+  * Youtube Data API
 
 # Screenshots
 Screenshot 1) Chrome Extension Page
