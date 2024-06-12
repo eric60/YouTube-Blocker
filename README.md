@@ -9,7 +9,11 @@ YouTube Blocker blocks YouTube videos not in the Education, Science & Technology
 
 [Diagram Link here](https://drive.google.com/file/d/1bfJn5ixQs3qVgTasrkL3UKKwkbV8ljPZ/view?usp=sharing)
 
-### Notes
+# Alternative Chrome Extensions
+* DF tube chrome extension
+* Unhook chrome extension
+
+# Notes
 - Each page has a different local storage
 - Understand Background action vs Browser action
 - Background Script has the context of the extension while
