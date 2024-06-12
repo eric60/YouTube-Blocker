@@ -38,6 +38,9 @@ so only the Background Script can run the CORS API requests.
   * Youtube Data API
 
 # Screenshots
+
+<details>
+  
 Screenshot 1) Chrome Extension Page
 ![image](https://github.com/eric60/YouTube-Blocker/assets/30248575/a9fe43a2-99c8-430f-b1e8-65bfe230a1de)
 
@@ -47,3 +50,5 @@ Screenshot 2) Chrome Extension popup.html
 
 Screenshot 3) Chrome Extension options.html
 ![image](https://github.com/eric60/YouTube-Blocker/assets/30248575/73642f81-7ad0-41ff-9aba-62c85dd67b8d)
+
+</details>
